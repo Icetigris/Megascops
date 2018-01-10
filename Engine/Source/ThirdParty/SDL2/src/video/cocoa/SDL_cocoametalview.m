@@ -28,7 +28,7 @@
 
 #import "SDL_cocoametalview.h"
 
-#if SDL_VIDEO_VULKAN && SDL_VIDEO_DRIVER_COCOA
+#if SDL_VIDEO_DRIVER_COCOA && (SDL_VIDEO_VULKAN || SDL_VIDEO_RENDER_METAL)
 
 #include "SDL_assert.h"
 
@@ -44,7 +44,7 @@
 }
 
 /* Indicate the view wants to draw using a backing layer instead of drawRect. */
--(BOOL) wantsUpdateLayer
+- (BOOL)wantsUpdateLayer
 {
     return YES;
 }
@@ -52,7 +52,7 @@
 /* When the wantsLayer property is set to YES, this method will be invoked to
  * return a layer instance.
  */
--(CALayer*) makeBackingLayer
+- (CALayer*)makeBackingLayer
 {
     return [self.class.layerClass layer];
 }
@@ -61,11 +61,12 @@
                    useHighDPI:(bool)useHighDPI
 {
 	if ((self = [super initWithFrame:frame])) {
-    
+        self.wantsLayer = YES;
+
         /* Allow resize. */
         self.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
         _tag = METALVIEW_TAG;
-      
+
         _useHighDPI = useHighDPI;
         [self updateDrawableSize];
 	}
@@ -74,8 +75,9 @@
 }
 
 /* Set the size of the metal drawables when the view is resized. */
-- (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
-    [super resizeSubviewsWithOldSize:oldSize];
+- (void)resizeWithOldSuperviewSize:(NSSize)oldSize
+{
+    [super resizeWithOldSuperviewSize:oldSize];
     [self updateDrawableSize];
 }
 
@@ -99,8 +101,6 @@ Cocoa_Mtl_AddMetalView(SDL_Window* window)
     SDL_cocoametalview *metalview
         = [[SDL_cocoametalview alloc] initWithFrame:view.frame
                        useHighDPI:(window->flags & SDL_WINDOW_ALLOW_HIGHDPI)];
-    // Instantiate the CAMetalLayer
-    metalview.wantsLayer = YES;
     [view addSubview:metalview];
     return metalview;
 }
@@ -123,6 +123,6 @@ Cocoa_Mtl_GetDrawableSize(SDL_Window * window, int * w, int * h)
     }
 }
 
-#endif /* SDL_VIDEO_VULKAN && SDL_VIDEO_DRIVER_COCOA */
+#endif /* SDL_VIDEO_DRIVER_COCOA && (SDL_VIDEO_VULKAN || SDL_VIDEO_RENDER_METAL) */
 
 /* vi: set ts=4 sw=4 expandtab: */
