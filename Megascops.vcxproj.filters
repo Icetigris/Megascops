@@ -9,5 +9,9 @@
     <ClCompile Include="Engine\Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+  <ItemGroup>
+    <ClInclude Include="Engine\Source\Log.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
