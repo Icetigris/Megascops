@@ -1,5 +1,10 @@
+// Copyright 2018 Elizabeth Baumel. All rights reserved.
+//==========================================================
+// Main.cpp - Entry point of entire engine.
+//==========================================================
 #include <Windows.h>
 #include <SDL.h>
+#include "PlatformUbiquitous.h"
 #include "Log.h"
 
 bool HandleEvents()
@@ -74,7 +79,7 @@ void CleanupAndQuit()
 	SDL_Quit();
 }
 
-int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	// Init SDL subsystems we're going to use.
 	InitSDL(SDL_INIT_VIDEO);

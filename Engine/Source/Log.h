@@ -1,4 +1,7 @@
-// Debug logging ayyyy
+// Copyright 2018 Elizabeth Baumel. All rights reserved.
+//==========================================================
+// Log.h - EntryDebug logging.
+//==========================================================
 
 #ifdef _MSC_VER
 #include <debugapi.h>
