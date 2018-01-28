@@ -21,7 +21,7 @@ bool HandleEvents()
 		case SDL_KEYUP:
 			// single key press
 			//log some shit to the console
-			MEGALOG("binch");
+			MEGALOGLN("binch");
 			break;
 		case SDL_KEYDOWN:
 			//hold key
