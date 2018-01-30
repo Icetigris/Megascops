@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include "PlatformUbiquitous.h"
 #include "Log.h"
+#include "SDL_syswm.h"
 
 bool HandleEvents()
 {
@@ -50,9 +51,17 @@ void InitSDL(Uint32 InitFlags)
 }
 
 SDL_Window* SDLWin;
+HWND WindowHandle; //used in swapchain desc
+//need device, adapter, dxgifactory, swapchain
 void InitWindow(const char* Title, int PositionX, int PositionY, int Width, int Height, int Flags)
 {
 	SDLWin = SDL_CreateWindow(Title, PositionX, PositionY, Width, Height, Flags);
+
+	SDL_SysWMinfo windowinfo;
+	SDL_VERSION(&windowinfo.version);
+	SDL_GetWindowWMInfo(SDLWin, &windowinfo);
+	WindowHandle = windowinfo.info.win.window;
+
 	if (SDLWin == nullptr)
 	{
 		MEGALOG("SDL_CreateWindow Error: " << SDL_GetError() << std::endl);
