@@ -4,21 +4,23 @@
 //==============================================================================================================
 #pragma once
 
+#include <stdint.h>
+
 struct UbiquitousPlatformTypes
 {
 	// Integer types
 
 	// Unsigned
-	typedef unsigned char      uint8;  //1 byte
-	typedef unsigned short int uint16; //2 bytes
-	typedef unsigned int       uint32; //4 bytes
-	typedef unsigned long long uint64; //8 bytes
+	typedef uint8_t  uint8;  //1 byte
+	typedef uint16_t uint16; //2 bytes
+	typedef uint32_t uint32; //4 bytes
+	typedef uint64_t uint64; //8 bytes
 
 	// Signed
-	typedef signed char        int8;   //1 byte
-	typedef signed short int   int16;  //2 bytes
-	typedef signed int         int32;  //4 bytes
-	typedef signed long long   int64;  //8 bytes
+	typedef int8_t  int8;   //1 byte
+	typedef int16_t int16;  //2 bytes
+	typedef int32_t int32;  //4 bytes
+	typedef int64_t int64;  //8 bytes
 
 	// Other stuff
 
