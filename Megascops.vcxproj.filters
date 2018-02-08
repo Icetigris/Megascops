@@ -2,9 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Engine\Source\Main.cpp" />
+    <ClCompile Include="Engine\Source\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\Log.h" />
     <ClInclude Include="Engine\Source\PlatformUbiquitous.h" />
+    <ClInclude Include="Engine\Source\Renderer.h" />
   </ItemGroup>
 </Project>

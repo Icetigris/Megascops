@@ -4,9 +4,9 @@
 //==========================================================
 #include <Windows.h>
 #include <SDL.h>
-#include "PlatformUbiquitous.h"
+#include "Renderer.h"
 #include "Log.h"
-#include "SDL_syswm.h"
+#include "PlatformUbiquitous.h"
 
 bool HandleEvents()
 {
@@ -51,16 +51,9 @@ void InitSDL(Uint32 InitFlags)
 }
 
 SDL_Window* SDLWin;
-HWND WindowHandle; //used in swapchain desc
-//need device, adapter, dxgifactory, swapchain
 void InitWindow(const char* Title, int PositionX, int PositionY, int Width, int Height, int Flags)
 {
 	SDLWin = SDL_CreateWindow(Title, PositionX, PositionY, Width, Height, Flags);
-
-	SDL_SysWMinfo windowinfo;
-	SDL_VERSION(&windowinfo.version);
-	SDL_GetWindowWMInfo(SDLWin, &windowinfo);
-	WindowHandle = windowinfo.info.win.window;
 
 	if (SDLWin == nullptr)
 	{
@@ -69,21 +62,8 @@ void InitWindow(const char* Title, int PositionX, int PositionY, int Width, int 
 	}
 }
 
-SDL_Renderer *SDLRenderer;
-void InitRenderer(SDL_Window* Window)//, GraphicsAPI RequestedAPI)
-{
-	SDLRenderer = SDL_CreateRenderer(SDLWin, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	if (SDLRenderer == nullptr)
-	{
-		SDL_DestroyWindow(SDLWin);
-		MEGALOG("SDL_CreateRenderer Error: " << SDL_GetError() << std::endl);
-		SDL_Quit();
-	}
-}
-
 void CleanupAndQuit()
 {
-	SDL_DestroyRenderer(SDLRenderer);
 	SDL_DestroyWindow(SDLWin);
 	SDL_Quit();
 }
@@ -97,7 +77,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	InitWindow("Megascops Engine", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
 
 	// Init renderer (default d3d12)
-	InitRenderer(SDLWin);//, RenderAPI)
+	CreateRenderer(SDLWin);//, RenderAPI)
 
 	// Game loop
 	while (HandleEvents())
@@ -105,8 +85,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		// Update
 
 		// Render
-		SDL_RenderClear(SDLRenderer);
-		SDL_RenderPresent(SDLRenderer);
+		Render();
 	}
 
 	CleanupAndQuit();
