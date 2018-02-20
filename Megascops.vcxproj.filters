@@ -3,10 +3,17 @@
   <ItemGroup>
     <ClCompile Include="Engine\Source\Main.cpp" />
     <ClCompile Include="Engine\Source\Renderer.cpp" />
+    <ClCompile Include="Engine\Source\DependencyNode.cpp" />
+    <ClCompile Include="Engine\Source\D3D12Adapter.cpp" />
+    <ClCompile Include="Engine\Source\D3D12Device.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\Log.h" />
     <ClInclude Include="Engine\Source\PlatformUbiquitous.h" />
     <ClInclude Include="Engine\Source\Renderer.h" />
+    <ClInclude Include="Engine\Source\DependencyNode.h" />
+    <ClInclude Include="Engine\Source\D3D12Adapter.h" />
+    <ClInclude Include="Engine\Source\Platform.h" />
+    <ClInclude Include="Engine\Source\D3D12Device.h" />
   </ItemGroup>
 </Project>
