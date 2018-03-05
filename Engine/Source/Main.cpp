@@ -41,11 +41,6 @@ bool HandleEvents()
 	return true;
 }
 
-void InitSDL(Uint32 InitFlags)
-{
-
-}
-
 SDL_Window* SDLWin;
 void InitWindow(const char* Title, int PositionX, int PositionY, int Width, int Height, int Flags)
 {

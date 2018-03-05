@@ -9,7 +9,7 @@
 
 HWND WindowHandle; //used in swapchain
 
-
+uint32 Renderer::FrameIndex = 0;
 void Renderer::Create(SDL_Window* SDLWin)
 {
 	SDL_SysWMinfo windowinfo;
@@ -29,24 +29,5 @@ void Renderer::Render()
 
 void Renderer::Destroy()
 {
-	// WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
-	// This is code implemented as such for simplicity. The D3D12HelloFrameBuffering
-	// sample illustrates how to use fences for efficient resource usage and to
-	// maximize GPU utilization.
-
-	// Signal and increment the fence value.
-	const UINT64 fence = Adapter->FenceValue;
-	Adapter->ChildDevice->CommandQueue->Signal(Adapter->FrameFence, fence);
-	Adapter->FenceValue++;
-
-	// Wait until the previous frame is finished.
-	if (Adapter->FrameFence->GetCompletedValue() < fence)
-	{
-		Adapter->FrameFence->SetEventOnCompletion(fence, Adapter->FenceEvent);
-		WaitForSingleObject(Adapter->FenceEvent, INFINITE);
-	}
-
-	Adapter->FrameIndex = Adapter->SwapChain->GetCurrentBackBufferIndex();
-
 	delete Adapter;
 }

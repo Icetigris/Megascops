@@ -12,6 +12,8 @@ const uint32 WinHeight = 480;
 class D3D12Adapter;
 class D3D12Device;
 
+// 2 for double buffering, 3 for triple buffering
+static const uint32 FrameBufferCount = 2;
 class Renderer : public DependencyNode
 {
 public:
@@ -24,4 +26,5 @@ public:
 	void Destroy();
 
 	D3D12Adapter* Adapter;
+	static uint32 FrameIndex;
 };

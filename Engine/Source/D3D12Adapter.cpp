@@ -16,7 +16,7 @@ void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
 
 	uint32 dxgiFactoryFlags = 0;
 	CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&DXGIFactory));
-#if (_DEBUG)
+#if (_DEBUG) //turgle - take a command  line arg to enable d3ddebug
 	// Enable the debug layer (requires the Graphics Tools "optional feature").
 	// NOTE: Enabling the debug layer after device creation will invalidate the active device.
 	{
@@ -49,6 +49,7 @@ void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
 			break;
 		}
 	}
+
 	if (!adapter)
 	{
 		MEGALOGLN("Could not find a hardware adapter that supports D3D12.");
@@ -65,8 +66,7 @@ void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
 
 void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 {
-	WindowHandle = InWindowHandle;
-	//check handle integrity?
+	WindowHandle = InWindowHandle; //turgle - check handle integrity?
 
 	// Describe and create the swap chain.
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -91,7 +91,7 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 
 	//swapChain.As(&m_swapChain);
 	SwapChain = static_cast<IDXGISwapChain3*>(swapChain);
-	FrameIndex = SwapChain->GetCurrentBackBufferIndex();
+	Renderer::FrameIndex = SwapChain->GetCurrentBackBufferIndex();
 
 	// Create descriptor heaps.
 	{
@@ -110,7 +110,7 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(RTVHeap->GetCPUDescriptorHandleForHeapStart());
 
 		// Create a RTV for each frame.
-		for (UINT n = 0; n < FrameBufferCount; n++)
+		for (uint32 n = 0; n < FrameBufferCount; n++)
 		{
 			SwapChain->GetBuffer(n, IID_PPV_ARGS(&FrameBuffers[n]));
 			ChildDevice->D3DDevice->CreateRenderTargetView(FrameBuffers[n], nullptr, rtvHandle); // MULTIGPUTODO: for EACH DEVICE
@@ -120,8 +120,12 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 
 	// Create synchronization objects.
 	{
-		ChildDevice->D3DDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&FrameFence)); // MULTIGPUTODO: for EACH DEVICE
-		FenceValue = 1;
+		ChildDevice->D3DDevice->CreateFence(/*InitialValue=*/0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&FrameFence)); // MULTIGPUTODO: for EACH DEVICE
+		
+		for (uint32 i = 0; i < FrameBufferCount; i++)
+		{
+			FenceValues[i] = 1;
+		}
 
 		// Create an event handle to use for frame synchronization.
 		FenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
@@ -132,6 +136,19 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 	}
 }
 
+void D3D12Adapter::WaitForGPUToFinish()
+{
+	// Schedule a Signal command in the queue.
+	ChildDevice->CommandQueue->Signal(FrameFence, FenceValues[Renderer::FrameIndex]);
+
+	// Wait until the fence has been processed.
+	FrameFence->SetEventOnCompletion(FenceValues[Renderer::FrameIndex], FenceEvent);
+	WaitForSingleObjectEx(FenceEvent, INFINITE, FALSE);
+
+	// Increment the fence value for the current frame.
+	FenceValues[Renderer::FrameIndex]++;
+}
+
 void D3D12Adapter::Present()
 {
 	ChildDevice->Draw();  // MULTIGPUTODO: for EACH DEVICE
@@ -139,22 +156,28 @@ void D3D12Adapter::Present()
 	// Present the frame.
 	SwapChain->Present(1, 0);
 
-	// WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
-	// This is code implemented as such for simplicity. The D3D12HelloFrameBuffering
-	// sample illustrates how to use fences for efficient resource usage and to
-	// maximize GPU utilization.
+	const UINT64 currentFenceValue = FenceValues[Renderer::FrameIndex];
 
-	// Signal and increment the fence value.
-	const UINT64 fence = FenceValue;
-	ChildDevice->CommandQueue->Signal(FrameFence, fence); // MULTIGPUTODO: for EACH DEVICE
-	FenceValue++;
+	// Schedule a Signal command in the queue.
+	ChildDevice->CommandQueue->Signal(FrameFence, currentFenceValue);
 
-	// Wait until the previous frame is finished.
-	if (FrameFence->GetCompletedValue() < fence)
+	// Update the frame index.
+	Renderer::FrameIndex = SwapChain->GetCurrentBackBufferIndex();
+
+	// If the next frame is not ready to be rendered yet, wait until it is ready.
+	if (FrameFence->GetCompletedValue() < FenceValues[Renderer::FrameIndex])
 	{
-		FrameFence->SetEventOnCompletion(fence, FenceEvent);
-		WaitForSingleObject(FenceEvent, INFINITE);
+		FrameFence->SetEventOnCompletion(FenceValues[Renderer::FrameIndex], FenceEvent);
+		WaitForSingleObjectEx(FenceEvent, INFINITE, FALSE);
 	}
 
-	FrameIndex = SwapChain->GetCurrentBackBufferIndex();
+	// Set the fence value for the next frame.
+	FenceValues[Renderer::FrameIndex] = currentFenceValue + 1;
+}
+
+
+D3D12Adapter::~D3D12Adapter()
+{
+	WaitForGPUToFinish();
+	CloseHandle(FenceEvent);
 }

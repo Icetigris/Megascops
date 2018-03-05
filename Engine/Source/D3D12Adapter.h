@@ -25,8 +25,6 @@
 // Dependencies: the engine not crashing before this point I guess lol
 class Renderer;
 class D3D12Device;
-// 2 for double buffering, 3 for triple buffering
-static const uint32 FrameBufferCount = 2;
 class D3D12Adapter : public DependencyNode
 {
 public:
@@ -37,13 +35,15 @@ public:
 		DXGIAdapter = nullptr;
 	}
 
+	~D3D12Adapter();
+
 	void Initialize(HWND InWindowHandle);
 	void CreateSwapChain(HWND InWindowHandle);
 	void Present();
+	void WaitForGPUToFinish();
 
 	IDXGIFactory4* GetFactory() const { return DXGIFactory; }
-	ID3D12Resource* GetCurrentFrameBuffer() const { return FrameBuffers[FrameIndex]; }
-	uint32 GetCurrentFrameBufferIndex() const { return FrameIndex; }
+	ID3D12Resource* GetCurrentFrameBuffer() const { return FrameBuffers[Renderer::FrameIndex]; }
 
 	IDXGIAdapter1* DXGIAdapter;
 	IDXGIFactory4* DXGIFactory;
@@ -56,10 +56,9 @@ public:
 	HWND WindowHandle; //do I need to keep this around or not
 
 	IDXGISwapChain3* SwapChain;
-	uint32 FrameIndex;
 	HANDLE FenceEvent;
 	ID3D12Fence* FrameFence;
-	uint64 FenceValue;
+	uint64 FenceValues[FrameBufferCount];
 	ID3D12Resource* FrameBuffers[FrameBufferCount];
 	ID3D12DescriptorHeap* RTVHeap;
 	UINT RTVDescriptorSize;
