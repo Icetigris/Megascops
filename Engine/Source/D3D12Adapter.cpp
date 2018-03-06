@@ -101,7 +101,7 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 		ChildDevice->D3DDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&RTVHeap)); // MULTIGPUTODO: for EACH DEVICE
-
+		RTVHeap->SetName(L"SwapChainRTVHeap");
 		RTVDescriptorSize = ChildDevice->D3DDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	}
 
@@ -114,6 +114,7 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 		{
 			SwapChain->GetBuffer(n, IID_PPV_ARGS(&FrameBuffers[n]));
 			ChildDevice->D3DDevice->CreateRenderTargetView(FrameBuffers[n], nullptr, rtvHandle); // MULTIGPUTODO: for EACH DEVICE
+			FrameBuffers[n]->SetName(L"SwapChainRTV");
 			rtvHandle.Offset(1, RTVDescriptorSize);
 		}
 	}
@@ -121,7 +122,8 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 	// Create synchronization objects.
 	{
 		ChildDevice->D3DDevice->CreateFence(/*InitialValue=*/0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&FrameFence)); // MULTIGPUTODO: for EACH DEVICE
-		
+		FrameFence->SetName(L"FrameFence");
+
 		for (uint32 i = 0; i < FrameBufferCount; i++)
 		{
 			FenceValues[i] = 1;
