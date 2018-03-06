@@ -22,7 +22,7 @@ public:
 	void Draw();
 
 	D3D12Adapter& ParentAdapter;
-	ID3D12Device* D3DDevice;
+	ID3D12Device* d3dDevice;
 	ID3D12CommandAllocator* CommandAllocators[FrameBufferCount];
 	ID3D12CommandQueue* CommandQueue; // can have at least 3 of these, one of each type (direct, compute, copy)
 	ID3D12GraphicsCommandList* CommandList;

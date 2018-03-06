@@ -108,7 +108,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;d3d12.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Engine\Binaries\$(Configuration)\$(Platform)\SDL2.lib;$(SolutionDir)Engine\Binaries\$(Configuration)\$(Platform)\SDL2main.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
     </Link>
@@ -144,12 +144,16 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(SolutionDir)Engine\Binaries\$(Configuration)\$(Platform)\SDL2.lib;$(SolutionDir)Engine\Binaries\$(Configuration)\$(Platform)\SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Engine\Binaries\$(Configuration)\$(Platform)\SDL2.lib;$(SolutionDir)Engine\Binaries\$(Configuration)\$(Platform)\SDL2main.lib;d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>
+      </ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Source\D3D12Adapter.cpp" />
     <ClCompile Include="Engine\Source\D3D12Device.cpp" />
+    <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp" />
+    <ClCompile Include="Engine\Source\D3D12RootSignature.cpp" />
     <ClCompile Include="Engine\Source\DependencyNode.cpp" />
     <ClCompile Include="Engine\Source\Main.cpp" />
     <ClCompile Include="Engine\Source\Renderer.cpp" />
@@ -157,6 +161,8 @@
   <ItemGroup>
     <ClInclude Include="Engine\Source\D3D12Adapter.h" />
     <ClInclude Include="Engine\Source\D3D12Device.h" />
+    <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h" />
+    <ClInclude Include="Engine\Source\D3D12RootSignature.h" />
     <ClInclude Include="Engine\Source\DependencyNode.h" />
     <ClInclude Include="Engine\Source\Log.h" />
     <ClInclude Include="Engine\Source\Platform.h" />

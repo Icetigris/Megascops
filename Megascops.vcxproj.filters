@@ -6,6 +6,8 @@
     <ClCompile Include="Engine\Source\DependencyNode.cpp" />
     <ClCompile Include="Engine\Source\D3D12Adapter.cpp" />
     <ClCompile Include="Engine\Source\D3D12Device.cpp" />
+    <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp" />
+    <ClCompile Include="Engine\Source\D3D12RootSignature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\Log.h" />
@@ -15,5 +17,7 @@
     <ClInclude Include="Engine\Source\D3D12Adapter.h" />
     <ClInclude Include="Engine\Source\Platform.h" />
     <ClInclude Include="Engine\Source\D3D12Device.h" />
+    <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h" />
+    <ClInclude Include="Engine\Source\D3D12RootSignature.h" />
   </ItemGroup>
 </Project>
