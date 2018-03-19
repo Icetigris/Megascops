@@ -1,6 +1,6 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==============================================================================================================
-// D3D12RootSignature.h - 
+// D3D12VertexBuffer.h - 
 //==============================================================================================================
 #pragma once
 #include "DependencyNode.h"
@@ -8,15 +8,17 @@
 #include "d3dx12.h"
 #include "Renderer.h"
 
-// Dependencies: child devices
-class D3D12Adapter;
-class D3D12RootSignature : public DependencyNode
+// Dependencies: D3D12Device
+class D3D12Device;
+class D3D12VertexBuffer : public DependencyNode
 {
 public:
-	D3D12RootSignature(D3D12Adapter& InAdapter);
+	D3D12VertexBuffer(D3D12Device& InDevice);
 
 	void Initialize();
-
-	D3D12Adapter& ParentAdapter;
-	ID3D12RootSignature* d3dRootSignature;
+	
+	ID3D12Device* d3dDevice; //probably don't need this? should be able to just pass it into Initialize() and check if the device is ready?
+	ID3D12Resource* VertexBuffer;
+	D3D12_VERTEX_BUFFER_VIEW VertexBufferView;
+	float AspectRatio;
 };

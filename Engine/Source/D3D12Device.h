@@ -26,4 +26,9 @@ public:
 	ID3D12CommandAllocator* CommandAllocators[FrameBufferCount];
 	ID3D12CommandQueue* CommandQueue; // can have at least 3 of these, one of each type (direct, compute, copy)
 	ID3D12GraphicsCommandList* CommandList;
+
+	//turgle temp move later
+	class D3D12RootSignature* RootSignature;
+	class D3D12PipelineStateObject* PipelineStateObject;
+	class D3D12VertexBuffer* VertexBuffer;
 };

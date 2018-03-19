@@ -7,7 +7,7 @@
 #include "D3D12Device.h"
 #include <D3Dcompiler.h> //turgle - move later
 
-D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature)
+D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/)
 	:  ParentAdapter(InAdapter)
 	, RootSignature(InRootSignature)
 {
@@ -30,8 +30,8 @@ void D3D12PipelineStateObject::Initialize()
 	uint32 compileFlags = 0;
 #endif
 	//turgle - all this shader stuff belongs somewhere else
-	D3DCompileFromFile(L"../../../Shaders/shaders.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, nullptr);
-	D3DCompileFromFile(L"../../../Shaders/shaders.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, nullptr);
+	D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/VertexShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, /*ppErrorMsgs=*/nullptr);
+	D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/PixelShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, /*ppErrorMsgs=*/nullptr);
 
 	//turgle - input layouts should go with geometry shit
 	// Define the vertex input layout.
@@ -58,7 +58,7 @@ void D3D12PipelineStateObject::Initialize()
 	psoDesc.SampleDesc.Count = 1;
 	//psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	psoDesc.SampleDesc.Count = 1;
-	psoDesc.NodeMask = 0; //MULTIGPUTODO - uhhh
+	psoDesc.NodeMask = 0; //MULTIGPUTODO - pipeline state objects can be used with more than one node at a time
 	//psoDesc.CachedPSO;
 	//psoDesc.Flags = 0;
 	ParentAdapter.ChildDevice->d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&d3dPipelineState));

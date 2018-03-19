@@ -63,7 +63,9 @@ void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
 	ChildDevice->Initialize(); // MULTIGPUTODO: for EACH DEVICE
 	CreateSwapChain(InWindowHandle);
 }
-
+// MULTIGPU NOTES:
+// if you use DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT, you have to use GetFrameLatencyWaitableObject() and wait yourself
+// SetMaximumFrameLatency() will stall Present() if you don't use DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT
 void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 {
 	WindowHandle = InWindowHandle; //turgle - check handle integrity?
@@ -89,7 +91,6 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 
 	DXGIFactory->MakeWindowAssociation(WindowHandle, DXGI_MWA_NO_ALT_ENTER);
 
-	//swapChain.As(&m_swapChain);
 	SwapChain = static_cast<IDXGISwapChain3*>(swapChain);
 	Renderer::FrameIndex = SwapChain->GetCurrentBackBufferIndex();
 

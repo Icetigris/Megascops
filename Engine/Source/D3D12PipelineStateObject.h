@@ -1,6 +1,7 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==============================================================================================================
-// D3D12PipelineStateObject.h - D3D12 logical device. Represents 1 GPU.
+// D3D12PipelineStateObject.h - Represents all the pipeline state, from Input Assembler to OutputMerger, for a draw call. 
+// Includes the actual bytecode of the shaders bound for a draw call, state for the rasterizer, blending, depth stencil, (in multigpu) which nodes this state applies to,
 //==============================================================================================================
 #pragma once
 #include "DependencyNode.h"
@@ -14,7 +15,7 @@ class D3D12Adapter;
 class D3D12PipelineStateObject : public DependencyNode
 {
 public:
-	D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature);
+	D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/);
 
 	void Initialize();
 

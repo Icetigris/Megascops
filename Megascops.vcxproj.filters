@@ -1,23 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Engine\Source\Main.cpp" />
-    <ClCompile Include="Engine\Source\Renderer.cpp" />
-    <ClCompile Include="Engine\Source\DependencyNode.cpp" />
-    <ClCompile Include="Engine\Source\D3D12Adapter.cpp" />
-    <ClCompile Include="Engine\Source\D3D12Device.cpp" />
-    <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp" />
-    <ClCompile Include="Engine\Source\D3D12RootSignature.cpp" />
+    <ClCompile Include="Engine\Source\D3D12Adapter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\D3D12Device.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\D3D12RootSignature.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\D3D12VertexBuffer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\DependencyNode.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Renderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Source\Log.h" />
-    <ClInclude Include="Engine\Source\PlatformUbiquitous.h" />
-    <ClInclude Include="Engine\Source\Renderer.h" />
-    <ClInclude Include="Engine\Source\DependencyNode.h" />
-    <ClInclude Include="Engine\Source\D3D12Adapter.h" />
-    <ClInclude Include="Engine\Source\Platform.h" />
-    <ClInclude Include="Engine\Source\D3D12Device.h" />
-    <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h" />
-    <ClInclude Include="Engine\Source\D3D12RootSignature.h" />
+    <ClInclude Include="Engine\Source\D3D12Adapter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\D3D12Device.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\D3D12RootSignature.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\D3D12VertexBuffer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\DependencyNode.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Log.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Platform.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\PlatformUbiquitous.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Renderer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{e698ed83-e1df-4bd0-8003-d0af2684e6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{c065dfe2-20c0-4fcf-85a4-7c2b89350e96}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\Shaders\PIxelShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\Shaders\VertexShader.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

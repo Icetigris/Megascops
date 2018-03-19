@@ -52,7 +52,6 @@ public:
 	//make this a vector later
 	D3D12Device* ChildDevice; // MULTIGPUTODO: for EACH DEVICE
 
-	//uhhh moved this shit here from Display which I'm deleting
 	HWND WindowHandle; //do I need to keep this around or not
 
 	IDXGISwapChain3* SwapChain;
