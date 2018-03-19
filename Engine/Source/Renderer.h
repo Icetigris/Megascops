@@ -9,6 +9,7 @@
 
 const uint32 WinWidth = 640;
 const uint32 WinHeight = 480;
+const float AspectRatio = (float)WinWidth / (float)WinHeight;
 class D3D12Adapter;
 class D3D12Device;
 

@@ -67,10 +67,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\Shaders\PIxelShader.hlsl">
+    <FxCompile Include="Engine\Shaders\VertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\VertexShader.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

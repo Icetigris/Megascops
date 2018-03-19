@@ -1,15 +1,15 @@
 struct PSInput
 {
-	float4 position : SV_POSITION;
-	float4 color : COLOR;
+	float4 Position : SV_POSITION;
+	float4 Color : COLOR;
 };
 
-PSInput VSMain(float4 position : POSITION, float4 color : COLOR)
+PSInput VSMain(float4 Position : POSITION, float4 Color : COLOR)
 {
-	PSInput result;
+	PSInput Result;
 
-	result.position = position;
-	result.color = color;
+	Result.Position = Position;
+	Result.Color = Color;
 
-	return result;
+	return Result;
 }

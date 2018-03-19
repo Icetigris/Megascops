@@ -20,5 +20,4 @@ public:
 	ID3D12Device* d3dDevice; //probably don't need this? should be able to just pass it into Initialize() and check if the device is ready?
 	ID3D12Resource* VertexBuffer;
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView;
-	float AspectRatio;
 };

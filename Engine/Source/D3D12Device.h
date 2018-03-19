@@ -28,7 +28,5 @@ public:
 	ID3D12GraphicsCommandList* CommandList;
 
 	//turgle temp move later
-	class D3D12RootSignature* RootSignature;
-	class D3D12PipelineStateObject* PipelineStateObject;
 	class D3D12VertexBuffer* VertexBuffer;
 };

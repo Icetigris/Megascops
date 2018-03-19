@@ -4,7 +4,6 @@
 //==========================================================
 #include "D3D12Device.h"
 #include "D3D12Adapter.h"
-#include <DirectXMath.h> //turgle - move later
 #include "D3D12RootSignature.h"
 #include "D3D12PipelineStateObject.h"
 #include "D3D12VertexBuffer.h"
@@ -47,13 +46,7 @@ void D3D12Device::Initialize()
 	d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&CommandQueue));
 	CommandQueue->SetName(L"DirectCommandQueue");
 
-	//root signature
-	RootSignature = new D3D12RootSignature(ParentAdapter);
-	RootSignature->Initialize();
-
-	PipelineStateObject = new D3D12PipelineStateObject(ParentAdapter, *RootSignature);
-	PipelineStateObject->Initialize();
-
+	//turgle move later
 	VertexBuffer = new D3D12VertexBuffer(*this);
 	VertexBuffer->Initialize();
 
@@ -85,10 +78,10 @@ void D3D12Device::Draw()
 	// However, when ExecuteCommandList() is called on a particular command 
 	// list, that command list can then be reset at any time and must be before 
 	// re-recording.
-	CommandList->Reset(CommandAllocators[Renderer::FrameIndex], ParentAdapter.PipelineState);
+	CommandList->Reset(CommandAllocators[Renderer::FrameIndex], ParentAdapter.PipelineStateObject->d3dPipelineState);
 	
 	// Set necessary state.
-	CommandList->SetGraphicsRootSignature(RootSignature->d3dRootSignature);
+	CommandList->SetGraphicsRootSignature(ParentAdapter.RootSignature->d3dRootSignature);
 	CommandList->RSSetViewports(1, &Viewport);
 	CommandList->RSSetScissorRects(1, &ScissorRect);
 

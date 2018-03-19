@@ -6,6 +6,8 @@
 #include "D3D12Adapter.h"
 #include "D3D12Device.h"
 #include "Log.h"
+#include "D3D12RootSignature.h"
+#include "D3D12PipelineStateObject.h"
 
 //also copied from the d3d12 samples lol
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
@@ -62,6 +64,13 @@ void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
 
 	ChildDevice->Initialize(); // MULTIGPUTODO: for EACH DEVICE
 	CreateSwapChain(InWindowHandle);
+
+	//turgle move later
+	RootSignature = new D3D12RootSignature(*this);
+	RootSignature->Initialize();
+
+	PipelineStateObject = new D3D12PipelineStateObject(*this, *RootSignature);
+	PipelineStateObject->Initialize();
 }
 // MULTIGPU NOTES:
 // if you use DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT, you have to use GetFrameLatencyWaitableObject() and wait yourself

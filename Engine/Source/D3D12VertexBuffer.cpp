@@ -12,15 +12,11 @@ D3D12VertexBuffer::D3D12VertexBuffer(D3D12Device& InDevice)
 	d3dDevice = InDevice.d3dDevice;
 }
 
-//void CreateRootSignature(ID3D12Device* D3DDevice)
-//void CreatePipelineStateObject(ID3D12Device* D3DDevice, ID3D12PipelineState* PipelineState)
-
 struct Vertex
 {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT4 color;
 };
-
 
 void D3D12VertexBuffer::Initialize()
 {
@@ -34,7 +30,7 @@ void D3D12VertexBuffer::Initialize()
 			{ { -0.25f, -0.25f * AspectRatio, 0.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } }
 		};
 
-		const UINT vertexBufferSize = sizeof(triangleVertices);
+		const uint32 vertexBufferSize = sizeof(triangleVertices);
 
 		// Note: using upload heaps to transfer static data like vert buffers is not 
 		// recommended. Every time the GPU needs it, the upload heap will be marshalled 
@@ -49,7 +45,7 @@ void D3D12VertexBuffer::Initialize()
 			IID_PPV_ARGS(&VertexBuffer));
 
 		// Copy the triangle data to the vertex buffer.
-		UINT8* pVertexDataBegin;
+		uint8* pVertexDataBegin;
 		CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
 		VertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
 		memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));

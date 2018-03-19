@@ -61,4 +61,7 @@ public:
 	ID3D12Resource* FrameBuffers[FrameBufferCount];
 	ID3D12DescriptorHeap* RTVHeap;
 	UINT RTVDescriptorSize;
+
+	class D3D12RootSignature* RootSignature;
+	class D3D12PipelineStateObject* PipelineStateObject;
 };
