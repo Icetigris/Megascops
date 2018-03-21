@@ -6,6 +6,7 @@
 #include "D3D12Adapter.h"
 #include "D3D12Device.h"
 #include <D3Dcompiler.h> //turgle - move later
+#include "Log.h"
 
 D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/)
 	:  ParentAdapter(InAdapter)
@@ -30,8 +31,29 @@ void D3D12PipelineStateObject::Initialize()
 	uint32 compileFlags = 0;
 #endif
 	//turgle - all this shader stuff belongs somewhere else
-	D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/VertexShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, /*ppErrorMsgs=*/nullptr);
-	D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/PixelShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, /*ppErrorMsgs=*/nullptr);
+	HRESULT hr = S_OK;
+	ID3DBlob* VSErrorBlob = nullptr;
+	hr = D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/VertexShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, &VSErrorBlob);
+	if (FAILED(hr))
+	{
+		if (VSErrorBlob)
+		{
+			MEGALOGLN((char*)VSErrorBlob->GetBufferPointer());
+			VSErrorBlob->Release();
+		}
+	}
+
+	ID3DBlob* PSErrorBlob = nullptr;
+	hr = D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/PixelShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, &PSErrorBlob);
+	if (FAILED(hr))
+	{
+		if (PSErrorBlob)
+		{
+			MEGALOGLN((char*)PSErrorBlob->GetBufferPointer());
+			PSErrorBlob->Release();
+		}
+	}
+
 
 	//turgle - input layouts should go with geometry shit
 	// Define the vertex input layout.
@@ -61,5 +83,5 @@ void D3D12PipelineStateObject::Initialize()
 	psoDesc.NodeMask = 0; //MULTIGPUTODO - pipeline state objects can be used with more than one node at a time
 	//psoDesc.CachedPSO;
 	//psoDesc.Flags = 0;
-	ParentAdapter.ChildDevice->d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&d3dPipelineState));
+	hr = ParentAdapter.ChildDevice->d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&d3dPipelineState));
 }
