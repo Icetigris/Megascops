@@ -33,7 +33,7 @@ void D3D12PipelineStateObject::Initialize()
 	//turgle - all this shader stuff belongs somewhere else
 	HRESULT hr = S_OK;
 	ID3DBlob* VSErrorBlob = nullptr;
-	hr = D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/VertexShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, &VSErrorBlob);
+	hr = D3DCompileFromFile(L"E:/Megascops/Engine/Shaders/VertexShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, &VSErrorBlob);
 	if (FAILED(hr))
 	{
 		if (VSErrorBlob)
@@ -44,7 +44,7 @@ void D3D12PipelineStateObject::Initialize()
 	}
 
 	ID3DBlob* PSErrorBlob = nullptr;
-	hr = D3DCompileFromFile(L"D:/Megascops/Engine/Shaders/PixelShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, &PSErrorBlob);
+	hr = D3DCompileFromFile(L"E:/Megascops/Engine/Shaders/PixelShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, &PSErrorBlob);
 	if (FAILED(hr))
 	{
 		if (PSErrorBlob)

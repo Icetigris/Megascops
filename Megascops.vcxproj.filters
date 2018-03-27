@@ -57,6 +57,9 @@
     <ClInclude Include="Engine\Source\Renderer.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Source\ThirdParty\Clara\clara.hpp">
+      <Filter>Source\ThirdParty</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">
@@ -65,12 +68,15 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{c065dfe2-20c0-4fcf-85a4-7c2b89350e96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ThirdParty">
+      <UniqueIdentifier>{554f432d-494e-4b9a-8d34-e19dcd42c8cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\Shaders\VertexShader.hlsl">
+    <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
+    <FxCompile Include="Engine\Shaders\VertexShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "Platform.h"
+#include "ThirdParty/Clara/clara.hpp"
 
 bool HandleEvents()
 {
@@ -41,34 +42,36 @@ bool HandleEvents()
 	return true;
 }
 
-SDL_Window* SDLWin;
-void InitWindow(const char* Title, int PositionX, int PositionY, int Width, int Height, int Flags)
-{
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		MEGALOGLN("SDL_Init Error: " << SDL_GetError());
-		SDL_Quit();
-	}
-	SDLWin = SDL_CreateWindow(Title, PositionX, PositionY, Width, Height, Flags);
-
-	if (SDLWin == nullptr)
-	{
-		MEGALOGLN("SDL_CreateWindow Error: " << SDL_GetError());
-		SDL_Quit();
-	}
-}
-
 //this will be moved
 DependencyNode Root;
 Renderer D3D12Renderer(Root);
-
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	// Init SDL window
-	InitWindow("Megascops Engine", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
-
+	//process command line args
+	uint32 WindowWidth = 640;
+	uint32 WindowHeight = 480;
+	bool bEnableD3DDebugLayer = false;
+	bool bUseWARPAdapter = false;
+	auto cli
+		= clara::Opt(WindowWidth, "WindowWidth")
+			["-WindowWidth"]["-WindowWidth="]
+			("Application window width")
+		| clara::Opt(WindowHeight, "WindowHeight")
+			["-WindowHeight"]["-WindowHeight="]
+			("Application window height")
+		| clara::Opt(bEnableD3DDebugLayer, "d3ddebug")
+			["-d3ddebug"]
+			("Enable d3ddebug layer")
+		| clara::Opt(bUseWARPAdapter, "WARP")
+			["-WARP"]
+			("Use WARP adapter");
+	char* argv = new char[nCmdShow];
+	wcstombs(argv, pCmdLine, nCmdShow);
+	const std::string argvstring(argv);
+	//auto result = cli.parse(clara::Args(nCmdShow, argvstring.c_str()));
+	delete argv;
 	// Init renderer (default d3d12)
-	D3D12Renderer.Create(SDLWin);//, RenderAPI)
+	D3D12Renderer.Create("Megascops Engine", 100, 100, WindowWidth, WindowHeight, bEnableD3DDebugLayer, bUseWARPAdapter);
 
 	// Game loop
 	while (HandleEvents())
@@ -80,6 +83,5 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	}
 
 	D3D12Renderer.Destroy();
-	SDL_DestroyWindow(SDLWin);
 	SDL_Quit();
 }

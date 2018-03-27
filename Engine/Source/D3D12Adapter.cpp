@@ -166,7 +166,7 @@ void D3D12Adapter::Present()
 	ChildDevice->Draw();  // MULTIGPUTODO: for EACH DEVICE
 
 	// Present the frame.
-	SwapChain->Present(1, 0);
+	SwapChain->Present(/*Syncinterval=*/1, /*Flags=*/0);
 
 	const uint64 currentFenceValue = FenceValues[Renderer::FrameIndex];
 

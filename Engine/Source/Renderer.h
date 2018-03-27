@@ -7,9 +7,13 @@
 #include "SDL_syswm.h"
 #include "DependencyNode.h"
 
-const uint32 WinWidth = 640;
-const uint32 WinHeight = 480;
-const float AspectRatio = (float)WinWidth / (float)WinHeight;
+//Window-related globals
+extern uint32 WinWidth;
+extern uint32 WinHeight;
+extern bool bEnableD3DDebug;
+extern bool bCreateWARPAdapter;
+extern float AspectRatio;
+
 class D3D12Adapter;
 class D3D12Device;
 
@@ -22,10 +26,11 @@ public:
 		: DependencyNode(Root, "Renderer")
 	{}
 	~Renderer()	{}
-	void Create(SDL_Window* SDLWin);
+	void Create(const char* Title, int32 PositionX, int32 PositionY, int32 Width, int32 Height, bool bEnableD3DDebug, bool bCreateWARPAdapter);
 	void Render();
 	void Destroy();
 
+	SDL_Window* SDLWin;
 	D3D12Adapter* Adapter;
 	static uint32 FrameIndex;
 };
