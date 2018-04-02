@@ -64,21 +64,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	}
 
 	//process command line args
-	uint32 WindowWidth = 640;
-	uint32 WindowHeight = 480;
-	bool bEnableD3DDebugLayer = false;
-	bool bUseWARPAdapter = false;
 	auto cli =
-		  clara::Opt(bEnableD3DDebugLayer)
+		  clara::Opt(bEnableD3DDebug)
 			["--d3ddebug"]
 			("Enable d3ddebug layer")
-		| clara::Opt(bUseWARPAdapter)
+		| clara::Opt(bCreateWARPAdapter)
 			["--WARP"]
 			("Use WARP adapter")
-		| clara::Opt(WindowWidth, "WindowWidth")
+		| clara::Opt(WinPosX, "WindowPositionX")
+			["--WinPosX"]
+			("Window X position")
+		| clara::Opt(WinPosY, "WindowPositionY")
+			["--WinPosY"]
+			("Window Y position")
+		| clara::Opt(WinWidth, "WindowWidth")
 			["--WinWidth"]
 			("Window width")
-		| clara::Opt(WindowHeight, "WindowHeight")
+		| clara::Opt(WinHeight, "WindowHeight")
 			["--WinHeight"]
 			("Window height");
 
@@ -88,7 +90,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 		MEGALOGLN("[Clara failure] " << result.errorMessage().c_str());
 	}
 	// Init renderer (default d3d12)
-	D3D12Renderer.Create("Megascops Engine", 100, 100, WindowWidth, WindowHeight, bEnableD3DDebugLayer, bUseWARPAdapter);
+	D3D12Renderer.Create("Megascops Engine");
 
 	// Game loop
 	while (HandleEvents())

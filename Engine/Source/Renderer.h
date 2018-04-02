@@ -8,6 +8,8 @@
 #include "DependencyNode.h"
 
 //Window-related globals
+extern uint32 WinPosX;
+extern uint32 WinPosY;
 extern uint32 WinWidth;
 extern uint32 WinHeight;
 extern bool bEnableD3DDebug;
@@ -26,7 +28,7 @@ public:
 		: DependencyNode(Root, "Renderer")
 	{}
 	~Renderer()	{}
-	void Create(const char* Title, int32 PositionX, int32 PositionY, int32 Width, int32 Height, bool bEnableD3DDebug, bool bCreateWARPAdapter);
+	void Create(const char* Title);
 	void Render();
 	void Destroy();
 
