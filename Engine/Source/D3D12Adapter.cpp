@@ -12,16 +12,17 @@
 //also copied from the d3d12 samples lol
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
 // If no such adapter can be found, *ppAdapter will be set to nullptr.
-void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
+void D3D12Adapter::Initialize(HWND InWindowHandle)
 {
 	IDXGIAdapter1* adapter;
 
 	uint32 dxgiFactoryFlags = 0;
 	CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&DXGIFactory));
-#if (_DEBUG) //turgle - take a command  line arg to enable d3ddebug
-	// Enable the debug layer (requires the Graphics Tools "optional feature").
-	// NOTE: Enabling the debug layer after device creation will invalidate the active device.
+
+	if(bEnableD3DDebug)
 	{
+		// Enable the debug layer (requires the Graphics Tools "optional feature").
+		// NOTE: Enabling the debug layer after device creation will invalidate the active device.
 		ID3D12Debug* debugController;
 		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
 		{
@@ -29,9 +30,11 @@ void D3D12Adapter::Initialize(HWND InWindowHandle) //d3ddebug or not?
 
 			// Enable additional debug layers.
 			dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+
+			MEGALOGLN("D3DDebug Layer Enabled.");
 		}
 	}
-#endif
+
 
 	for (uint32 adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapters1(adapterIndex, &adapter); ++adapterIndex)
 	{
