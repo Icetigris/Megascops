@@ -45,31 +45,44 @@ bool HandleEvents()
 //this will be moved
 DependencyNode Root;
 Renderer D3D12Renderer(Root);
+clara::Parser cli;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
+	//extract argc and argv from this winmain nonsense
+	int32 argc;
+	WCHAR** argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+	//convert argv to UTF-8
+	char** utf8Argv = new char *[argc];
+
+	for (int i = 0; i < argc; ++i) 
+	{
+		int bufSize = WideCharToMultiByte(CP_UTF8, 0, argv[i], -1, NULL, 0, NULL, NULL);
+
+		utf8Argv[i] = new char[bufSize];
+
+		WideCharToMultiByte(CP_UTF8, 0, argv[i], -1, utf8Argv[i], bufSize, NULL, NULL);
+	}
+
 	//process command line args
 	uint32 WindowWidth = 640;
 	uint32 WindowHeight = 480;
 	bool bEnableD3DDebugLayer = false;
 	bool bUseWARPAdapter = false;
-	auto cli
-		= clara::Opt(WindowWidth, "WindowWidth")
-			["-WindowWidth"]["-WindowWidth="]
-			("Application window width")
+	cli = clara::Opt(WindowWidth, "WindowWidth")
+		["-WindowWidth"]["-WindowWidth="]
+		("Application window width")
 		| clara::Opt(WindowHeight, "WindowHeight")
-			["-WindowHeight"]["-WindowHeight="]
-			("Application window height")
+		["-WindowHeight"]["-WindowHeight="]
+		("Application window height")
 		| clara::Opt(bEnableD3DDebugLayer, "d3ddebug")
-			["-d3ddebug"]
-			("Enable d3ddebug layer")
+		["-d3ddebug"]
+	("Enable d3ddebug layer")
 		| clara::Opt(bUseWARPAdapter, "WARP")
-			["-WARP"]
-			("Use WARP adapter");
-	char* argv = new char[nCmdShow];
-	wcstombs(argv, pCmdLine, nCmdShow);
-	const std::string argvstring(argv);
-	//auto result = cli.parse(clara::Args(nCmdShow, argvstring.c_str()));
-	delete argv;
+		["-WARP"]
+	("Use WARP adapter");
+
+	cli.parse(clara::Args(argc, utf8Argv));
 	// Init renderer (default d3d12)
 	D3D12Renderer.Create("Megascops Engine", 100, 100, WindowWidth, WindowHeight, bEnableD3DDebugLayer, bUseWARPAdapter);
 
