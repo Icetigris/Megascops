@@ -74,7 +74,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 			("Enable d3ddebug layer")
 		| clara::Opt(bUseWARPAdapter)
 			["--WARP"]
-			("Use WARP adapter");
+			("Use WARP adapter")
+		| clara::Opt(WindowWidth, "WindowWidth")
+			["--WinWidth"]
+			("Window width")
+		| clara::Opt(WindowHeight, "WindowHeight")
+			["--WinHeight"]
+			("Window height");
 
 	auto result = cli.parse(clara::Args(argc, utf8Argv));
 	if (!result)
