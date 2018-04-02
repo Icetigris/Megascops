@@ -45,7 +45,6 @@ bool HandleEvents()
 //this will be moved
 DependencyNode Root;
 Renderer D3D12Renderer(Root);
-clara::Parser cli;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	//extract argc and argv from this winmain nonsense
@@ -69,20 +68,19 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	uint32 WindowHeight = 480;
 	bool bEnableD3DDebugLayer = false;
 	bool bUseWARPAdapter = false;
-	cli = clara::Opt(WindowWidth, "WindowWidth")
-		["-WindowWidth"]["-WindowWidth="]
-		("Application window width")
-		| clara::Opt(WindowHeight, "WindowHeight")
-		["-WindowHeight"]["-WindowHeight="]
-		("Application window height")
-		| clara::Opt(bEnableD3DDebugLayer, "d3ddebug")
-		["-d3ddebug"]
-	("Enable d3ddebug layer")
-		| clara::Opt(bUseWARPAdapter, "WARP")
-		["-WARP"]
-	("Use WARP adapter");
+	auto cli =
+		  clara::Opt(bEnableD3DDebugLayer)
+			["--d3ddebug"]
+			("Enable d3ddebug layer")
+		| clara::Opt(bUseWARPAdapter)
+			["--WARP"]
+			("Use WARP adapter");
 
-	cli.parse(clara::Args(argc, utf8Argv));
+	auto result = cli.parse(clara::Args(argc, utf8Argv));
+	if (!result)
+	{
+		MEGALOGLN("[Clara failure] " << result.errorMessage().c_str());
+	}
 	// Init renderer (default d3d12)
 	D3D12Renderer.Create("Megascops Engine", 100, 100, WindowWidth, WindowHeight, bEnableD3DDebugLayer, bUseWARPAdapter);
 
