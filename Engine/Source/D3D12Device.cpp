@@ -2,6 +2,7 @@
 //==========================================================
 // D3D12Device.cpp - D3D12 logical device. Represents 1 GPU.
 //==========================================================
+#include "Renderer.h"
 #include "D3D12Device.h"
 #include "D3D12Adapter.h"
 #include "D3D12RootSignature.h"
@@ -15,7 +16,7 @@ D3D12Device::D3D12Device(D3D12Adapter& InAdapter)
 
 void D3D12Device::Initialize()
 {
-	if (0)//turgle - take a command line arg for setting up a WARP adapter
+	if (bCreateWARPAdapter)
 	{
 		IDXGIAdapter* warpAdapter;
 		ParentAdapter.DXGIFactory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter));
