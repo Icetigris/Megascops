@@ -150,6 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Source\CommandLine.cpp" />
     <ClCompile Include="Engine\Source\D3D12Adapter.cpp" />
     <ClCompile Include="Engine\Source\D3D12Device.cpp" />
     <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="Engine\Source\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Source\CommandLine.h" />
     <ClInclude Include="Engine\Source\D3D12Adapter.h" />
     <ClInclude Include="Engine\Source\D3D12Device.h" />
     <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h" />

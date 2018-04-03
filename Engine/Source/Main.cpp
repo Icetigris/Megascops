@@ -7,7 +7,7 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "Platform.h"
-#include "ThirdParty/Clara/clara.hpp"
+#include "CommandLine.h"
 
 bool HandleEvents()
 {
@@ -47,48 +47,8 @@ DependencyNode Root;
 Renderer D3D12Renderer(Root);
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	//extract argc and argv from this winmain nonsense
-	int32 argc;
-	WCHAR** argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	HandleCommandLineInput();
 
-	//convert argv to UTF-8
-	char** utf8Argv = new char *[argc];
-
-	for (int i = 0; i < argc; ++i) 
-	{
-		int bufSize = WideCharToMultiByte(CP_UTF8, 0, argv[i], -1, NULL, 0, NULL, NULL);
-
-		utf8Argv[i] = new char[bufSize];
-
-		WideCharToMultiByte(CP_UTF8, 0, argv[i], -1, utf8Argv[i], bufSize, NULL, NULL);
-	}
-
-	//process command line args
-	auto cli =
-		  clara::Opt(bEnableD3DDebug)
-			["--d3ddebug"]
-			("Enable d3ddebug layer")
-		| clara::Opt(bCreateWARPAdapter)
-			["--WARP"]
-			("Use WARP adapter")
-		| clara::Opt(WinPosX, "WindowPositionX")
-			["--WinPosX"]
-			("Window X position")
-		| clara::Opt(WinPosY, "WindowPositionY")
-			["--WinPosY"]
-			("Window Y position")
-		| clara::Opt(WinWidth, "WindowWidth")
-			["--WinWidth"]
-			("Window width")
-		| clara::Opt(WinHeight, "WindowHeight")
-			["--WinHeight"]
-			("Window height");
-
-	auto result = cli.parse(clara::Args(argc, utf8Argv));
-	if (!result)
-	{
-		MEGALOGLN("[Clara failure] " << result.errorMessage().c_str());
-	}
 	// Init renderer (default d3d12)
 	D3D12Renderer.Create("Megascops Engine");
 
