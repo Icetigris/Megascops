@@ -5,11 +5,4 @@
 #pragma once
 #include "Platform.h"
 
-struct CommandLine
-{
-	int32 argc;
-	char** argv;
-
-};
-
 extern void HandleCommandLineInput();

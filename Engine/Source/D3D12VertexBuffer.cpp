@@ -1,6 +1,6 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==========================================================
-// D3D12Device.cpp - D3D12 logical device. Represents 1 GPU.
+// D3D12VertexBuffer.cpp - Vertex buffers and vertex buffer views.
 //==========================================================
 #include "D3D12VertexBuffer.h"
 #include "D3D12Device.h"

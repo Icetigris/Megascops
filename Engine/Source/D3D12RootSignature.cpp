@@ -1,7 +1,15 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
-//==========================================================
-// D3D12RootSignature.cpp - 
-//==========================================================
+//==============================================================================================================
+// D3D12RootSignature.h - Defines which resources the shader needs bound to the pipeline.
+//==============================================================================================================
+/*
+ * This is the thing that defines what resources you need bound and which PSOs you can use with a shader.
+ * It's kinda like a function signature, but for a shader. Each entry is a root parameter, you fill root parameters with root arguments.
+ * Root arguments can contain inlined root constants, inlined descriptors, and descriptor tables (pointers to a range of descriptors in a descriptor heap).
+ * Root constants are basically inlined constant buffers. NO BOUNDS CHECKING
+ * Root descriptors are inlined CBVs and 1D raw or structured SRV or UAV buffers. Use this for frequently-accessed buffers of these types. NO BOUNDS CHECKING
+ * Descriptor tables are for everything else. Most stuff goes in there, like 2D texture SRVs, samplers, etc. These do specify a size for bounds checking.
+ */
 #include "D3D12RootSignature.h"
 #include "D3D12Adapter.h"
 #include "D3D12Device.h"

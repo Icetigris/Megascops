@@ -1,7 +1,36 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==========================================================
-// D3D12PipelineStateObject.cpp - 
+// D3D12PipelineStateObject.cpp - Represents all the pipeline state, from Input Assembler to OutputMerger, for a draw call.
 //==========================================================
+/* 
+ * Includes the actual bytecode of the shaders bound for a draw call, state for the rasterizer, blending, depth stencil, 
+ * (in multigpu) which nodes this state applies to, root signature for bound shaders.
+ *
+ * GRAPHICS pipeline state objects have a node mask, cached PSO, flags, and then this stuff for the following stages:
+ *
+ * Input Assembler: 
+ *	-PrimitiveTopologyType (primitive adjacency and ordering is set on a command list though)
+ *	-Index buffer strip cut value (only used with triangle strips)
+ *
+ * Shader stages (VS-GS, PS): 
+ *	-shader bytecode
+ *	-root signature
+ *
+ * Stream Output: 
+ *	-SO desc
+ *
+ * Rasterizer: 
+ *	-Rasterizer state (viewport  and scissor rect set on command list)
+ *
+ * Output Merger:
+ *	-Blend mode
+ *	-Number of render targets and their formats
+ *	-Multisampling parameters (sample desc)
+ *	-Sample mask
+ *	-Depth stencil state
+ *
+ * COMPUTE pipeline state objects just have a root signature, CS bytecode, node mask, cached PSO, and flags.
+ */
 #include "D3D12PipelineStateObject.h"
 #include "D3D12Adapter.h"
 #include "D3D12Device.h"
@@ -11,6 +40,7 @@
 D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/)
 	:  ParentAdapter(InAdapter)
 	, RootSignature(InRootSignature)
+	//shader bytecode
 {
 	std::vector<DependencyNode> SetupDependencies;
 	SetupDependencies.push_back(InAdapter);

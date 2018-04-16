@@ -17,9 +17,9 @@ extern void HandleCommandLineInput()
 	//convert argv to UTF-8
 	char** utf8Argv = new char *[argc];
 
-	for (int i = 0; i < argc; ++i) 
+	for (int32 i = 0; i < argc; ++i) 
 	{
-		int bufSize = WideCharToMultiByte(CP_UTF8, 0, argv[i], -1, NULL, 0, NULL, NULL);
+		int32 bufSize = WideCharToMultiByte(CP_UTF8, 0, argv[i], -1, NULL, 0, NULL, NULL);
 
 		utf8Argv[i] = new char[bufSize];
 

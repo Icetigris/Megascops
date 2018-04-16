@@ -1,6 +1,6 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==============================================================================================================
-// D3D12VertexBuffer.h - 
+// D3D12VertexBuffer.h - Vertex buffers and vertex buffer views.
 //==============================================================================================================
 #pragma once
 #include "DependencyNode.h"

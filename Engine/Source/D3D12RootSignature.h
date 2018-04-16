@@ -1,6 +1,6 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==============================================================================================================
-// D3D12RootSignature.h - 
+// D3D12RootSignature.h - Defines which resources the shader needs bound to the pipeline.
 //==============================================================================================================
 #pragma once
 #include "DependencyNode.h"
