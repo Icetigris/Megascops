@@ -28,6 +28,9 @@
     <ClCompile Include="Engine\Source\CommandLine.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\D3D12ConstantBuffer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\D3D12Adapter.h">
@@ -64,6 +67,9 @@
       <Filter>Source\ThirdParty</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Source\CommandLine.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\D3D12ConstantBuffer.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

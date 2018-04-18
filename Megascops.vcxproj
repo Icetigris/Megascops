@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Source\CommandLine.cpp" />
     <ClCompile Include="Engine\Source\D3D12Adapter.cpp" />
+    <ClCompile Include="Engine\Source\D3D12ConstantBuffer.cpp" />
     <ClCompile Include="Engine\Source\D3D12Device.cpp" />
     <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp" />
     <ClCompile Include="Engine\Source\D3D12RootSignature.cpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Source\CommandLine.h" />
     <ClInclude Include="Engine\Source\D3D12Adapter.h" />
+    <ClInclude Include="Engine\Source\D3D12ConstantBuffer.h" />
     <ClInclude Include="Engine\Source\D3D12Device.h" />
     <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h" />
     <ClInclude Include="Engine\Source\D3D12RootSignature.h" />

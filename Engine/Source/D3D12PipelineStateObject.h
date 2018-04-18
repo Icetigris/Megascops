@@ -10,7 +10,7 @@
 #include "D3D12RootSignature.h"
 
 class D3D12Adapter;
-// Dependencies: child devices, root signature
+// Dependencies: child devices, root signature, shaders
 class D3D12PipelineStateObject : public DependencyNode
 {
 public:
