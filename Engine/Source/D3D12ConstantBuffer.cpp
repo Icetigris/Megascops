@@ -43,6 +43,7 @@ void D3D12ConstantBuffer::Initialize()
 		// app closes. Keeping things mapped for the lifetime of the resource is okay.
 		CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
 		ConstantBuffer->Map(0, &readRange, reinterpret_cast<void**>(&CbvDataBegin));
+		memset(&ConstantBufferData, 0, sizeof(ConstantBufferData));
 		memcpy(CbvDataBegin, &ConstantBufferData, sizeof(ConstantBufferData));
 	}
 }

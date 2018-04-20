@@ -8,6 +8,7 @@
 #include "D3D12RootSignature.h"
 #include "D3D12PipelineStateObject.h"
 #include "D3D12VertexBuffer.h"
+#include "D3D12ConstantBuffer.h"
 
 D3D12Device::D3D12Device(D3D12Adapter& InAdapter)
 	: DependencyNode(InAdapter, "D3D12Device")
@@ -50,6 +51,9 @@ void D3D12Device::Initialize()
 	//turgle move later
 	VertexBuffer = new D3D12VertexBuffer(*this);
 	VertexBuffer->Initialize();
+	//turgle move later
+	ConstantBuffer = new D3D12ConstantBuffer(*this);
+	ConstantBuffer->Initialize();
 
 	for (uint32 i = 0; i < FrameBufferCount; i++)
 	{
@@ -66,10 +70,20 @@ void D3D12Device::Initialize()
 		CommandList->Close();
 	}
 }
+//turgle move later
 CD3DX12_VIEWPORT Viewport(0.0f, 0.0f, static_cast<float>(WinWidth), static_cast<float>(WinHeight));
 CD3DX12_RECT ScissorRect(0, 0, static_cast<LONG>(WinWidth), static_cast<LONG>(WinHeight));
 void D3D12Device::Draw()
 {
+	const float translationSpeed = 0.005f;
+	const float offsetBounds = 1.25f;
+
+	ConstantBuffer->ConstantBufferData.offset.x += translationSpeed;
+	if (ConstantBuffer->ConstantBufferData.offset.x > offsetBounds)
+	{
+		ConstantBuffer->ConstantBufferData.offset.x = -offsetBounds;
+	}
+	memcpy(ConstantBuffer->CbvDataBegin, &ConstantBuffer->ConstantBufferData, sizeof(ConstantBuffer->ConstantBufferData));
 	//-------
 	// Command list allocators can only be reset when the associated 
 	// command lists have finished execution on the GPU; apps should use 
@@ -83,6 +97,11 @@ void D3D12Device::Draw()
 	
 	// Set necessary state.
 	CommandList->SetGraphicsRootSignature(ParentAdapter.RootSignature->d3dRootSignature);
+
+	ID3D12DescriptorHeap* ppHeaps[] = { ConstantBuffer->CBVHeap };
+	CommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	CommandList->SetGraphicsRootDescriptorTable(0, ConstantBuffer->CBVHeap->GetGPUDescriptorHandleForHeapStart());
 	CommandList->RSSetViewports(1, &Viewport);
 	CommandList->RSSetScissorRects(1, &ScissorRect);
 

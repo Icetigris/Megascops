@@ -33,5 +33,5 @@ public:
 
 	//turgle - unhack this
 	SceneConstantBuffer ConstantBufferData;
-	UINT8* CbvDataBegin;
+	uint8* CbvDataBegin;
 };

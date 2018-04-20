@@ -29,4 +29,5 @@ public:
 
 	//turgle temp move later
 	class D3D12VertexBuffer* VertexBuffer;
+	class D3D12ConstantBuffer* ConstantBuffer;
 };
