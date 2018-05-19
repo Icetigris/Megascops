@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -54,12 +54,13 @@ typedef unsigned int SDL_TLSID;
 /**
  *  The SDL thread priority.
  *
- *  \note On many systems you require special privileges to set high priority.
+ *  \note On many systems you require special privileges to set high or time critical priority.
  */
 typedef enum {
     SDL_THREAD_PRIORITY_LOW,
     SDL_THREAD_PRIORITY_NORMAL,
-    SDL_THREAD_PRIORITY_HIGH
+    SDL_THREAD_PRIORITY_HIGH,
+    SDL_THREAD_PRIORITY_TIME_CRITICAL
 } SDL_ThreadPriority;
 
 /**

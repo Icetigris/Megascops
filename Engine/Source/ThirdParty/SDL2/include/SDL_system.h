@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -76,6 +76,18 @@ extern DECLSPEC SDL_bool SDLCALL SDL_DXGIGetOutputInfo( int displayIndex, int *a
 #endif /* __WIN32__ */
 
 
+/* Platform specific functions for Linux */
+#ifdef __LINUX__
+
+/**
+   \brief Sets the UNIX nice value for a thread, using setpriority() if possible, and RealtimeKit if available.
+
+   \return 0 on success, or -1 on error.
+ */
+extern DECLSPEC int SDLCALL SDL_LinuxSetThreadPriority(Sint64 threadID, int priority);
+ 
+#endif /* __LINUX__ */
+	
 /* Platform specific functions for iOS */
 #if defined(__IPHONEOS__) && __IPHONEOS__
 
@@ -107,6 +119,11 @@ extern DECLSPEC void * SDLCALL SDL_AndroidGetJNIEnv(void);
    (using env->Push/PopLocalFrame or manually with env->DeleteLocalRef)
  */
 extern DECLSPEC void * SDLCALL SDL_AndroidGetActivity(void);
+
+/**
+   \brief Return true if the application is running on Android TV
+ */
+extern DECLSPEC SDL_bool SDLCALL SDL_IsAndroidTV(void);
 
 /**
    See the official Android developer guide for more information:

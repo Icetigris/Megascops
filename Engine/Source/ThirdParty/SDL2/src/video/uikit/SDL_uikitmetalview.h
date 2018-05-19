@@ -1,6 +1,6 @@
 /*
  Simple DirectMedia Layer
- Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+ Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
  
  This software is provided 'as-is', without any express or implied
  warranty.  In no event will the authors be held liable for any damages
@@ -43,8 +43,7 @@
 @interface SDL_uikitmetalview : SDL_uikitview
 
 - (instancetype)initWithFrame:(CGRect)frame
-                        scale:(CGFloat)scale
-                        tag:(int)tag;
+                        scale:(CGFloat)scale;
 
 @end
 

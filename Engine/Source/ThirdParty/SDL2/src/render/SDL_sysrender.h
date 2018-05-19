@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -31,6 +31,13 @@
 
 typedef struct SDL_RenderDriver SDL_RenderDriver;
 
+typedef enum
+{
+    SDL_ScaleModeNearest,
+    SDL_ScaleModeLinear,
+    SDL_ScaleModeBest
+} SDL_ScaleMode;
+
 typedef struct
 {
     float x;
@@ -55,6 +62,7 @@ struct SDL_Texture
     int h;                      /**< The height of the texture */
     int modMode;                /**< The texture modulation mode */
     SDL_BlendMode blendMode;    /**< The texture blend mode */
+    SDL_ScaleMode scaleMode;    /**< The texture scale mode */
     Uint8 r, g, b, a;           /**< Texture modulation values */
 
     SDL_Renderer *renderer;

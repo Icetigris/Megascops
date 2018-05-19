@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -1161,17 +1161,6 @@ D3D11_SupportsBlendMode(SDL_Renderer * renderer, SDL_BlendMode blendMode)
     return SDL_TRUE;
 }
 
-static D3D11_FILTER
-GetScaleQuality(void)
-{
-    const char *hint = SDL_GetHint(SDL_HINT_RENDER_SCALE_QUALITY);
-    if (!hint || *hint == '0' || SDL_strcasecmp(hint, "nearest") == 0) {
-        return D3D11_FILTER_MIN_MAG_MIP_POINT;
-    } else /* if (*hint == '1' || SDL_strcasecmp(hint, "linear") == 0) */ {
-        return D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    }
-}
-
 static int
 D3D11_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
 {
@@ -1192,7 +1181,7 @@ D3D11_CreateTexture(SDL_Renderer * renderer, SDL_Texture * texture)
         SDL_OutOfMemory();
         return -1;
     }
-    textureData->scaleMode = GetScaleQuality();
+    textureData->scaleMode = (texture->scaleMode == SDL_ScaleModeNearest) ?  D3D11_FILTER_MIN_MAG_MIP_POINT : D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 
     texture->driverdata = textureData;
 

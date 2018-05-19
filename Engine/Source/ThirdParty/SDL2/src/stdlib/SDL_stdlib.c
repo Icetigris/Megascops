@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -277,6 +277,26 @@ SDL_logf(float x)
     return logf(x);
 #else
     return (float)SDL_log((double)x);
+#endif
+}
+
+double
+SDL_log10(double x)
+{
+#if defined(HAVE_LOG10)
+    return log10(x);
+#else
+    return SDL_uclibc_log10(x);
+#endif
+}
+
+float
+SDL_log10f(float x)
+{
+#if defined(HAVE_LOG10F)
+    return log10f(x);
+#else
+    return (float)SDL_log10((double)x);
 #endif
 }
 

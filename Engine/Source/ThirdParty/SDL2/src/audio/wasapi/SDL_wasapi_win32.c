@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -188,7 +188,6 @@ SDLMMNotificationClient_OnDeviceRemoved(IMMNotificationClient *ithis, LPCWSTR pw
 static HRESULT STDMETHODCALLTYPE
 SDLMMNotificationClient_OnDeviceStateChanged(IMMNotificationClient *ithis, LPCWSTR pwstrDeviceId, DWORD dwNewState)
 {
-    SDLMMNotificationClient *this = (SDLMMNotificationClient *) ithis;
     IMMDevice *device = NULL;
 
     if (SUCCEEDED(IMMDeviceEnumerator_GetDevice(enumerator, pwstrDeviceId, &device))) {
@@ -232,7 +231,7 @@ static const IMMNotificationClientVtbl notification_client_vtbl = {
     SDLMMNotificationClient_OnPropertyValueChanged
 };
 
-static SDLMMNotificationClient notification_client = { &notification_client_vtbl, 1 };
+static SDLMMNotificationClient notification_client = { &notification_client_vtbl, { 1 } };
 
 
 int
@@ -403,7 +402,7 @@ void
 WASAPI_PlatformDeleteActivationHandler(void *handler)
 {
     /* not asynchronous. */
-    SDL_assert(!"This function should have only be called on WinRT.");
+    SDL_assert(!"This function should have only been called on WinRT.");
 }
 
 void

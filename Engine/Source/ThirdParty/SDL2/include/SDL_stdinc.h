@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -85,6 +85,28 @@
 #endif
 #ifdef HAVE_FLOAT_H
 # include <float.h>
+#endif
+#if defined(HAVE_ALLOCA) && !defined(alloca)
+# if defined(HAVE_ALLOCA_H)
+#  include <alloca.h>
+# elif defined(__GNUC__)
+#  define alloca __builtin_alloca
+# elif defined(_MSC_VER)
+#  include <malloc.h>
+#  define alloca _alloca
+# elif defined(__WATCOMC__)
+#  include <malloc.h>
+# elif defined(__BORLANDC__)
+#  include <malloc.h>
+# elif defined(__DMC__)
+#  include <stdlib.h>
+# elif defined(__AIX__)
+#pragma alloca
+# elif defined(__MRC__)
+void *alloca(unsigned);
+# else
+char *alloca();
+# endif
 #endif
 
 /**
@@ -328,28 +350,6 @@ SDL_COMPILE_TIME_ASSERT(enum, sizeof(SDL_DUMMY_ENUM) == sizeof(int));
 extern "C" {
 #endif
 
-#if defined(HAVE_ALLOCA) && !defined(alloca)
-# if defined(HAVE_ALLOCA_H)
-#  include <alloca.h>
-# elif defined(__GNUC__)
-#  define alloca __builtin_alloca
-# elif defined(_MSC_VER)
-#  include <malloc.h>
-#  define alloca _alloca
-# elif defined(__WATCOMC__)
-#  include <malloc.h>
-# elif defined(__BORLANDC__)
-#  include <malloc.h>
-# elif defined(__DMC__)
-#  include <stdlib.h>
-# elif defined(__AIX__)
-#pragma alloca
-# elif defined(__MRC__)
-void *alloca(unsigned);
-# else
-char *alloca();
-# endif
-#endif
 #ifdef HAVE_ALLOCA
 #define SDL_stack_alloc(type, count)    (type*)alloca(sizeof(type)*(count))
 #define SDL_stack_free(data)
@@ -445,7 +445,6 @@ SDL_FORCE_INLINE void SDL_memset4(void *dst, Uint32 val, size_t dwords)
 #endif
 }
 
-
 extern DECLSPEC void *SDLCALL SDL_memcpy(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
 
 extern DECLSPEC void *SDLCALL SDL_memmove(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
@@ -522,6 +521,8 @@ extern DECLSPEC double SDLCALL SDL_fmod(double x, double y);
 extern DECLSPEC float SDLCALL SDL_fmodf(float x, float y);
 extern DECLSPEC double SDLCALL SDL_log(double x);
 extern DECLSPEC float SDLCALL SDL_logf(float x);
+extern DECLSPEC double SDLCALL SDL_log10(double x);
+extern DECLSPEC float SDLCALL SDL_log10f(float x);
 extern DECLSPEC double SDLCALL SDL_pow(double x, double y);
 extern DECLSPEC float SDLCALL SDL_powf(float x, float y);
 extern DECLSPEC double SDLCALL SDL_scalbn(double x, int n);

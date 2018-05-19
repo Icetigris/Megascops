@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -421,6 +421,11 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             POINT cursorPos;
             BOOL minimized;
 
+            /* Don't mark the window as shown if it's activated before being shown */
+            if (!IsWindowVisible(hwnd)) {
+                break;
+            }
+
             minimized = HIWORD(wParam);
             if (!minimized && (LOWORD(wParam) != WA_INACTIVE)) {
                 if (LOWORD(wParam) == WA_CLICKACTIVE) {
@@ -697,8 +702,6 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             int w, h;
             int min_w, min_h;
             int max_w, max_h;
-            int style;
-            BOOL menu;
             BOOL constrain_max_size;
 
             if (SDL_IsShapedWindow(data->window))
@@ -731,21 +734,23 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                 constrain_max_size = FALSE;
             }
 
-            size.top = 0;
-            size.left = 0;
-            size.bottom = h;
-            size.right = w;
+            if (!(SDL_GetWindowFlags(data->window) & SDL_WINDOW_BORDERLESS)) {
+                LONG style = GetWindowLong(hwnd, GWL_STYLE);
+                /* DJM - according to the docs for GetMenu(), the
+                   return value is undefined if hwnd is a child window.
+                   Apparently it's too difficult for MS to check
+                   inside their function, so I have to do it here.
+                 */
+                BOOL menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != NULL);
+                size.top = 0;
+                size.left = 0;
+                size.bottom = h;
+                size.right = w;
 
-            style = GetWindowLong(hwnd, GWL_STYLE);
-            /* DJM - according to the docs for GetMenu(), the
-               return value is undefined if hwnd is a child window.
-               Apparently it's too difficult for MS to check
-               inside their function, so I have to do it here.
-             */
-            menu = (style & WS_CHILDWINDOW) ? FALSE : (GetMenu(hwnd) != NULL);
-            AdjustWindowRectEx(&size, style, menu, 0);
-            w = size.right - size.left;
-            h = size.bottom - size.top;
+                AdjustWindowRectEx(&size, style, menu, 0);
+                w = size.right - size.left;
+                h = size.bottom - size.top;
+            }
 
             /* Fix our size to the current size */
             info = (MINMAXINFO *) lParam;
@@ -967,12 +972,14 @@ WIN_WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
     case WM_NCCALCSIZE:
         {
-            if (wParam == TRUE && SDL_GetWindowFlags(data->window) & SDL_WINDOW_BORDERLESS) {
+            Uint32 window_flags = SDL_GetWindowFlags(data->window);
+            if (wParam == TRUE && (window_flags & SDL_WINDOW_BORDERLESS) && !(window_flags & SDL_WINDOW_FULLSCREEN)) {
                 /* When borderless, need to tell windows that the size of the non-client area is 0 */
-                if (!(SDL_GetWindowFlags(data->window) & SDL_WINDOW_RESIZABLE)) {
+                if (!(window_flags & SDL_WINDOW_RESIZABLE)) {
                     int w, h;
                     NCCALCSIZE_PARAMS *params = (NCCALCSIZE_PARAMS *)lParam;
-                    SDL_GetWindowSize(data->window, &w, &h);
+                    w = data->window->windowed.w;
+                    h = data->window->windowed.h;
                     params->rgrc[0].right = params->rgrc[0].left + w;
                     params->rgrc[0].bottom = params->rgrc[0].top + h;
                 }

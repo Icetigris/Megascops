@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -22,6 +22,7 @@
 
 #if SDL_VIDEO_RENDER_OGL_ES2 && !SDL_RENDER_DISABLED
 
+#include "SDL_assert.h"
 #include "SDL_hints.h"
 #include "SDL_opengles2.h"
 #include "../SDL_sysrender.h"
@@ -259,10 +260,8 @@ GL_CheckAllErrors (const char *prefix, SDL_Renderer *renderer, const char *file,
 
 #if 0
 #define GL_CheckError(prefix, renderer)
-#elif defined(_MSC_VER) || defined(__WATCOMC__)
-#define GL_CheckError(prefix, renderer) GL_CheckAllErrors(prefix, renderer, __FILE__, __LINE__, __FUNCTION__)
 #else
-#define GL_CheckError(prefix, renderer) GL_CheckAllErrors(prefix, renderer, __FILE__, __LINE__, __PRETTY_FUNCTION__)
+#define GL_CheckError(prefix, renderer) GL_CheckAllErrors(prefix, renderer, SDL_FILE, SDL_LINE, SDL_FUNCTION)
 #endif
 
 
@@ -554,18 +553,6 @@ static void GLES2_UnlockTexture(SDL_Renderer *renderer, SDL_Texture *texture);
 static int GLES2_SetRenderTarget(SDL_Renderer * renderer, SDL_Texture * texture);
 static void GLES2_DestroyTexture(SDL_Renderer *renderer, SDL_Texture *texture);
 
-static GLenum
-GetScaleQuality(void)
-{
-    const char *hint = SDL_GetHint(SDL_HINT_RENDER_SCALE_QUALITY);
-
-    if (!hint || *hint == '0' || SDL_strcasecmp(hint, "nearest") == 0) {
-        return GL_NEAREST;
-    } else {
-        return GL_LINEAR;
-    }
-}
-
 static int
 GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
 {
@@ -626,7 +613,7 @@ GLES2_CreateTexture(SDL_Renderer *renderer, SDL_Texture *texture)
     data->nv12 = ((texture->format == SDL_PIXELFORMAT_NV12) || (texture->format == SDL_PIXELFORMAT_NV21));
     data->texture_u = 0;
     data->texture_v = 0;
-    scaleMode = GetScaleQuality();
+    scaleMode = (texture->scaleMode == SDL_ScaleModeNearest) ? GL_NEAREST : GL_LINEAR;
 
     /* Allocate a blob for image renderdata */
     if (texture->access == SDL_TEXTUREACCESS_STREAMING) {

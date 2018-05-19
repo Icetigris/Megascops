@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2017 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2018 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -152,6 +152,8 @@
 #cmakedefine HAVE_FMODF 1
 #cmakedefine HAVE_LOG 1
 #cmakedefine HAVE_LOGF 1
+#cmakedefine HAVE_LOG10 1
+#cmakedefine HAVE_LOG10F 1
 #cmakedefine HAVE_POW 1
 #cmakedefine HAVE_POWF 1
 #cmakedefine HAVE_SCALBN 1
