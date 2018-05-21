@@ -31,6 +31,12 @@
     <ClCompile Include="Engine\Source\D3D12ConstantBuffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\GameInstance.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Time.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\D3D12Adapter.h">
@@ -70,6 +76,12 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Source\D3D12ConstantBuffer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\GameInstance.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\Time.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

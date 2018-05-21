@@ -4,6 +4,7 @@
 //==========================================================
 #include <Windows.h>
 #include <SDL.h>
+#include "GameInstance.h"
 #include "Renderer.h"
 #include "Log.h"
 #include "Platform.h"
@@ -48,7 +49,7 @@ Renderer D3D12Renderer(Root);
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	HandleCommandLineInput();
-
+	GameInstance& Game = GameInstance::GetInstance();
 	// Init renderer (default d3d12)
 	D3D12Renderer.Create("Megascops Engine");
 
@@ -56,6 +57,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	while (HandleEvents())
 	{
 		// Update
+		GameInstance::Update();
 
 		// Render
 		D3D12Renderer.Render();

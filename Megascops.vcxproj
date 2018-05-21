@@ -158,8 +158,10 @@
     <ClCompile Include="Engine\Source\D3D12RootSignature.cpp" />
     <ClCompile Include="Engine\Source\D3D12VertexBuffer.cpp" />
     <ClCompile Include="Engine\Source\DependencyNode.cpp" />
+    <ClCompile Include="Engine\Source\GameInstance.cpp" />
     <ClCompile Include="Engine\Source\Main.cpp" />
     <ClCompile Include="Engine\Source\Renderer.cpp" />
+    <ClCompile Include="Engine\Source\Time.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\CommandLine.h" />
@@ -170,11 +172,13 @@
     <ClInclude Include="Engine\Source\D3D12RootSignature.h" />
     <ClInclude Include="Engine\Source\D3D12VertexBuffer.h" />
     <ClInclude Include="Engine\Source\DependencyNode.h" />
+    <ClInclude Include="Engine\Source\GameInstance.h" />
     <ClInclude Include="Engine\Source\Log.h" />
     <ClInclude Include="Engine\Source\Platform.h" />
     <ClInclude Include="Engine\Source\PlatformUbiquitous.h" />
     <ClInclude Include="Engine\Source\Renderer.h" />
     <ClInclude Include="Engine\Source\ThirdParty\Clara\clara.hpp" />
+    <ClInclude Include="Engine\Source\Time.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">
