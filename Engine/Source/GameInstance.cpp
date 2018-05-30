@@ -16,5 +16,7 @@ void GameInstance::Update()
 
 	DeltaTime = CurrentTime - PreviousTime;
 
-
+	//query runtime database for objects that need updating
+	//or have table of things that need updating?
+	//update anything the database gives back
 }

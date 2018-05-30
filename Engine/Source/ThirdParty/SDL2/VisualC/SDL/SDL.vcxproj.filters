@@ -452,6 +452,7 @@
     <ClCompile Include="..\..\src\video\yuv2rgb\yuv_rgb.c" />
     <ClCompile Include="..\..\src\render\direct3d11\SDL_shaders_d3d11.c" />
     <ClCompile Include="..\..\src\render\direct3d\SDL_shaders_d3d.c" />
+    <ClCompile Include="..\..\src\libm\e_log10.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\main\windows\version.rc" />

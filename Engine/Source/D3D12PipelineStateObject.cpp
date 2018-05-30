@@ -36,6 +36,7 @@
 #include "D3D12Device.h"
 #include <D3Dcompiler.h> //turgle - move later
 #include "Log.h"
+#include <filesystem>
 
 D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/)
 	:  ParentAdapter(InAdapter)
@@ -60,6 +61,18 @@ void D3D12PipelineStateObject::Initialize()
 #else
 	uint32 compileFlags = 0;
 #endif
+	std::filesystem::path CurrentDirectory = std::filesystem::current_path();
+	std::filesystem::path ShaderSubDirectory = std::filesystem::path("Engine/Shaders");
+	MEGALOGLN(CurrentDirectory / ShaderSubDirectory);
+	
+	for (auto& path : std::filesystem::recursive_directory_iterator(CurrentDirectory))
+	{
+		if (path.is_directory())
+		{
+			MEGALOGLN(path);
+		}
+	}
+
 	//turgle - all this shader stuff belongs somewhere else
 	HRESULT hr = S_OK;
 	ID3DBlob* VSErrorBlob = nullptr;

@@ -17,6 +17,7 @@ public:
 	{
 		return GameInstance();
 	}
+
 private:
 	static double CurrentTime;
 	static double PreviousTime;
@@ -24,5 +25,4 @@ private:
 	{
 		Time& t = Time::GetInstance();
 	}
-
 };
