@@ -38,6 +38,8 @@
 #include "Log.h"
 #include <filesystem>
 
+using namespace std::filesystem;
+
 D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/)
 	:  ParentAdapter(InAdapter)
 	, RootSignature(InRootSignature)
@@ -61,24 +63,40 @@ void D3D12PipelineStateObject::Initialize()
 #else
 	uint32 compileFlags = 0;
 #endif
-	std::filesystem::path CurrentDirectory = std::filesystem::current_path();
-	std::filesystem::path ShaderSubDirectory = std::filesystem::path("Engine/Shaders");
-	MEGALOGLN(CurrentDirectory / ShaderSubDirectory);
-	
-	for (auto& path : std::filesystem::recursive_directory_iterator(CurrentDirectory))
+	//turgle - this is lowkey hard-coded. To fix, iterate through and find the Engine and Shaders folders
+	path ShaderSourceDirectory = current_path() / path("Engine") / path("Shaders");
+	MEGALOGLN(ShaderSourceDirectory);
+	std::wstring VSShaderPathString;
+	std::wstring PSShaderPathString;
+	//turgle - this hot mess is basically example code for myself. I'll move it later.
+	for (const directory_entry& directoryEntryIt : recursive_directory_iterator(ShaderSourceDirectory))
 	{
-		if (path.is_directory())
+		path currentPath = directoryEntryIt.path();
+		path pathExtension = currentPath.extension();
+		if (pathExtension == L".hlsl")
 		{
-			MEGALOGLN(path);
+			MEGALOGLN(currentPath.filename());
+			if (currentPath.filename() == L"PixelShader.hlsl")
+			{
+				PSShaderPathString = currentPath.wstring();
+				MEGALOGLN(PSShaderPathString);
+			}
+
+			if (currentPath.filename() == L"VertexShader.hlsl")
+			{
+				VSShaderPathString = currentPath.wstring();
+				MEGALOGLN(VSShaderPathString);
+			}
 		}
 	}
 
 	//turgle - all this shader stuff belongs somewhere else
 	HRESULT hr = S_OK;
 	ID3DBlob* VSErrorBlob = nullptr;
-	hr = D3DCompileFromFile(L"E:/Megascops/Engine/Shaders/VertexShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, &VSErrorBlob);
+	hr = D3DCompileFromFile(VSShaderPathString.c_str(), /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertexShader, &VSErrorBlob);
 	if (FAILED(hr))
 	{
+		MEGALOGLN("Failed to compile vertex shader!");
 		if (VSErrorBlob)
 		{
 			MEGALOGLN((char*)VSErrorBlob->GetBufferPointer());
@@ -87,9 +105,10 @@ void D3D12PipelineStateObject::Initialize()
 	}
 
 	ID3DBlob* PSErrorBlob = nullptr;
-	hr = D3DCompileFromFile(L"E:/Megascops/Engine/Shaders/PixelShader.hlsl", /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, &PSErrorBlob);
+	hr = D3DCompileFromFile(PSShaderPathString.c_str(), /*pDefines=*/nullptr, /*pIncludes=*/nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixelShader, &PSErrorBlob);
 	if (FAILED(hr))
 	{
+		MEGALOGLN("Failed to compile pixel shader!");
 		if (PSErrorBlob)
 		{
 			MEGALOGLN((char*)PSErrorBlob->GetBufferPointer());
