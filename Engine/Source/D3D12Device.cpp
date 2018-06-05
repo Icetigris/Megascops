@@ -17,7 +17,7 @@ D3D12Device::D3D12Device(D3D12Adapter& InAdapter)
 
 void D3D12Device::Initialize()
 {
-	if (bCreateWARPAdapter)
+	if (GCreateWARPAdapter)
 	{
 		IDXGIAdapter* warpAdapter;
 		ParentAdapter.DXGIFactory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter));

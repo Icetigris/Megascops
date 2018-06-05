@@ -16,8 +16,9 @@ extern uint32 WinPosX = 100;
 extern uint32 WinPosY = 100;
 extern uint32 WinWidth = 640;
 extern uint32 WinHeight = 480;
-extern bool bEnableD3DDebug = false;
-extern bool bCreateWARPAdapter = false;
+extern bool GEnableD3DDebug = false;
+extern bool GCreateWARPAdapter = false;
+extern bool GIsFullscreen = false;
 extern float AspectRatio = 1.0f;
 void Renderer::Create(const char* Title)
 {

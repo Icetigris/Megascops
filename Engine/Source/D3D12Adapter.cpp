@@ -19,7 +19,7 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 	uint32 dxgiFactoryFlags = 0;
 	CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&DXGIFactory));
 
-	if(bEnableD3DDebug)
+	if(GEnableD3DDebug)
 	{
 		// Enable the debug layer (requires the Graphics Tools "optional feature").
 		// NOTE: Enabling the debug layer after device creation will invalidate the active device.
@@ -92,13 +92,20 @@ void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapChainDesc.SampleDesc.Count = 1;
 
+	DXGI_SWAP_CHAIN_FULLSCREEN_DESC swapChainFullscreenDesc = {};
+	swapChainFullscreenDesc.RefreshRate.Numerator = 0;
+	swapChainFullscreenDesc.RefreshRate.Denominator = 0;
+	swapChainFullscreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	swapChainFullscreenDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	swapChainFullscreenDesc.Windowed = !GIsFullscreen;
+
 	IDXGISwapChain1* swapChain;
 	DXGIFactory->CreateSwapChainForHwnd(
 		ChildDevice->CommandQueue,		// MULTIGPUTODO: for EACH DEVICE
 		WindowHandle,
 		&swapChainDesc,
-		nullptr,
-		nullptr,
+		&swapChainFullscreenDesc,
+		/*pRestrictToOutput=*/nullptr,
 		&swapChain);
 
 	DXGIFactory->MakeWindowAssociation(WindowHandle, DXGI_MWA_NO_ALT_ENTER);

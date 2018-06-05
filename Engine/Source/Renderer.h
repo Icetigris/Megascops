@@ -12,8 +12,9 @@ extern uint32 WinPosX;
 extern uint32 WinPosY;
 extern uint32 WinWidth;
 extern uint32 WinHeight;
-extern bool bEnableD3DDebug;
-extern bool bCreateWARPAdapter;
+extern bool GEnableD3DDebug;
+extern bool GCreateWARPAdapter;
+extern bool GIsFullscreen;
 extern float AspectRatio;
 
 class D3D12Adapter;

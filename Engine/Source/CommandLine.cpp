@@ -28,12 +28,15 @@ extern void HandleCommandLineInput()
 
 	//process command line args
 	auto cli =
-		  clara::Opt(bEnableD3DDebug)
+		  clara::Opt(GEnableD3DDebug)
 			["--d3ddebug"]
 			("Enable d3ddebug layer")
-		| clara::Opt(bCreateWARPAdapter)
+		| clara::Opt(GCreateWARPAdapter)
 			["--WARP"]
 			("Use WARP adapter")
+		| clara::Opt(GIsFullscreen)
+			["--fullscreen"]
+			("Use fullscreen mode")
 		| clara::Opt(WinPosX, "WindowPositionX")
 			["--WinPosX"]
 			("Window X position")
