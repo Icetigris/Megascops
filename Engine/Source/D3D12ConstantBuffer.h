@@ -3,7 +3,6 @@
 // D3D12ConstantBuffer.h - Constant buffers and constant buffer views.
 //==============================================================================================================
 #pragma once
-#include "DependencyNode.h"
 #include <d3d12.h>
 #include "d3dx12.h"
 #include "Renderer.h"
@@ -17,7 +16,7 @@ struct SceneConstantBuffer
 
 // Dependencies: D3D12Device
 class D3D12Device;
-class D3D12ConstantBuffer : public DependencyNode
+class D3D12ConstantBuffer
 {
 public:
 	D3D12ConstantBuffer(D3D12Device& InDevice);

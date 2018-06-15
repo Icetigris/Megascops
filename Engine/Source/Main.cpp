@@ -44,8 +44,7 @@ bool HandleEvents()
 }
 
 //this will be moved
-DependencyNode Root;
-Renderer D3D12Renderer(Root);
+Renderer D3D12Renderer;
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	HandleCommandLineInput();

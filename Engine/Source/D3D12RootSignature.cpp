@@ -16,8 +16,7 @@
 #include <D3Dcompiler.h> //turgle - move later
 
 D3D12RootSignature::D3D12RootSignature(D3D12Adapter& InAdapter)
-	: DependencyNode(InAdapter, "D3D12RootSignature")
-	, ParentAdapter(InAdapter)
+	: ParentAdapter(InAdapter)
 {}
 
 void D3D12RootSignature::Initialize()

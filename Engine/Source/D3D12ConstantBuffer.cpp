@@ -7,7 +7,6 @@
 
 //dependencies: upload heap
 D3D12ConstantBuffer::D3D12ConstantBuffer(D3D12Device& InDevice)
-	: DependencyNode(InDevice, "D3D12ConstantBuffer")
 {
 	d3dDevice = InDevice.d3dDevice;
 }

@@ -17,7 +17,6 @@
  * Source: https://gpuopen.com/performance-tweets-series-multi-gpu/
 */
 #pragma once
-#include "DependencyNode.h"
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include "d3dx12.h"
@@ -25,11 +24,10 @@
 // Dependencies: the engine not crashing before this point I guess lol
 class Renderer;
 class D3D12Device;
-class D3D12Adapter : public DependencyNode
+class D3D12Adapter
 {
 public:
 	D3D12Adapter(Renderer& InRenderer)
-		: DependencyNode(InRenderer, "D3D12Adapter")
 	{
 		PipelineState = nullptr;
 		DXGIAdapter = nullptr;

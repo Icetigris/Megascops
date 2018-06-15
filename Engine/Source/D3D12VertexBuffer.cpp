@@ -7,7 +7,6 @@
 #include <DirectXMath.h> //turgle - move later
 
 D3D12VertexBuffer::D3D12VertexBuffer(D3D12Device& InDevice)
-	: DependencyNode(InDevice, "D3D12VertexBuffer")
 {
 	d3dDevice = InDevice.d3dDevice;
 }

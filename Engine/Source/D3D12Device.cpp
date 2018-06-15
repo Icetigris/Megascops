@@ -11,8 +11,7 @@
 #include "D3D12ConstantBuffer.h"
 
 D3D12Device::D3D12Device(D3D12Adapter& InAdapter)
-	: DependencyNode(InAdapter, "D3D12Device")
-	, ParentAdapter(InAdapter)
+	:  ParentAdapter(InAdapter)
 {}
 
 void D3D12Device::Initialize()

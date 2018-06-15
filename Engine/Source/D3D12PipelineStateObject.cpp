@@ -44,12 +44,7 @@ D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D1
 	:  ParentAdapter(InAdapter)
 	, RootSignature(InRootSignature)
 	//shader bytecode
-{
-	std::vector<DependencyNode> SetupDependencies;
-	SetupDependencies.push_back(InAdapter);
-	SetupDependencies.push_back(InRootSignature);
-	DependencyNode(SetupDependencies, "D3D12PipelineStateObject");
-}
+{}
 
 void D3D12PipelineStateObject::Initialize()
 {

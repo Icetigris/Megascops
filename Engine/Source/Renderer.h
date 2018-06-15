@@ -5,7 +5,6 @@
 #pragma once
 #include "Platform.h"
 #include "SDL_syswm.h"
-#include "DependencyNode.h"
 
 //Window-related globals
 extern uint32 WinPosX;
@@ -22,11 +21,10 @@ class D3D12Device;
 
 // 2 for double buffering, 3 for triple buffering
 static const uint32 FrameBufferCount = 2;
-class Renderer : public DependencyNode
+class Renderer
 {
 public:
-	Renderer(DependencyNode& Root)
-		: DependencyNode(Root, "Renderer")
+	Renderer()
 	{}
 	~Renderer()	{}
 	void Create(const char* Title);

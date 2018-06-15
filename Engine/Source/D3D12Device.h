@@ -3,14 +3,13 @@
 // D3D12Device.h - D3D12 logical device. Represents 1 GPU.
 //==============================================================================================================
 #pragma once
-#include "DependencyNode.h"
 #include <d3d12.h>
 #include "d3dx12.h"
 #include "Renderer.h"
 
 // Dependencies: D3D12Adapter
 class D3D12Adapter;
-class D3D12Device : public DependencyNode
+class D3D12Device
 {
 public:
 	D3D12Device(D3D12Adapter& InAdapter);
