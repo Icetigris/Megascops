@@ -11,15 +11,8 @@
  * Descriptor tables are for everything else. Most stuff goes in there, like 2D texture SRVs, samplers, etc. These do specify a size for bounds checking.
  */
 #include "D3D12RootSignature.h"
-#include "D3D12Adapter.h"
-#include "D3D12Device.h"
-#include <D3Dcompiler.h> //turgle - move later
 
-D3D12RootSignature::D3D12RootSignature(D3D12Adapter& InAdapter)
-	: ParentAdapter(InAdapter)
-{}
-
-void D3D12RootSignature::Initialize()
+void D3D12RootSignature::Initialize(ID3D12Device* d3dDevice, uint32 NodeMask)
 {
 	// Create a root signature consisting of a descriptor table with a single CBV.
 	{
@@ -28,7 +21,7 @@ void D3D12RootSignature::Initialize()
 		// This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
 		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
 
-		if (ParentAdapter.ChildDevice->d3dDevice->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))
+		if (d3dDevice->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))
 		{
 			featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 		}
@@ -53,7 +46,7 @@ void D3D12RootSignature::Initialize()
 		ID3DBlob* signature;
 		ID3DBlob* error;
 		D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, featureData.HighestVersion, &signature, &error);
-		ParentAdapter.ChildDevice->d3dDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&d3dRootSignature));
+		d3dDevice->CreateRootSignature(NodeMask, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&d3dRootSignature));
 	}
 
 	//// Create an empty root signature.
@@ -63,6 +56,5 @@ void D3D12RootSignature::Initialize()
 	//ID3DBlob* signature;
 	//ID3DBlob* error;
 	//D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
-	//uint32 NodeMask = 0; // MULTIGPUTODO: actually get the node mask set up right for multiple nodes
-	//ParentAdapter.ChildDevice->d3dDevice->CreateRootSignature(NodeMask, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&d3dRootSignature));
+	//d3dDevice->CreateRootSignature(NodeMask, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&d3dRootSignature));
 }

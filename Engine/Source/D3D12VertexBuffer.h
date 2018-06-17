@@ -12,11 +12,10 @@ class D3D12Device;
 class D3D12VertexBuffer
 {
 public:
-	D3D12VertexBuffer(D3D12Device& InDevice);
+	D3D12VertexBuffer() {}
 
-	void Initialize();
+	void Initialize(ID3D12Device* d3dDevice);
 	
-	ID3D12Device* d3dDevice; //probably don't need this? should be able to just pass it into Initialize() and check if the device is ready?
 	ID3D12Resource* VertexBuffer;
 	D3D12_VERTEX_BUFFER_VIEW VertexBufferView;
 };

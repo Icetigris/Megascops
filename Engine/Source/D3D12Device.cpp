@@ -48,11 +48,11 @@ void D3D12Device::Initialize()
 	CommandQueue->SetName(L"DirectCommandQueue");
 
 	//turgle move later
-	VertexBuffer = new D3D12VertexBuffer(*this);
-	VertexBuffer->Initialize();
+	VertexBuffer = new D3D12VertexBuffer();
+	VertexBuffer->Initialize(d3dDevice);
 	//turgle move later
-	ConstantBuffer = new D3D12ConstantBuffer(*this);
-	ConstantBuffer->Initialize();
+	ConstantBuffer = new D3D12ConstantBuffer();
+	ConstantBuffer->Initialize(d3dDevice, /*NodeMask=*/0);
 
 	for (uint32 i = 0; i < FrameBufferCount; i++)
 	{
@@ -72,7 +72,7 @@ void D3D12Device::Initialize()
 //turgle move later
 CD3DX12_VIEWPORT Viewport(0.0f, 0.0f, static_cast<float>(WinWidth), static_cast<float>(WinHeight));
 CD3DX12_RECT ScissorRect(0, 0, static_cast<LONG>(WinWidth), static_cast<LONG>(WinHeight));
-void D3D12Device::Draw()
+void D3D12Device::Draw()//pass a draw list? of vertex and constant buffers?
 {
 	const float translationSpeed = 0.005f;
 	const float offsetBounds = 1.25f;
@@ -100,7 +100,7 @@ void D3D12Device::Draw()
 	ID3D12DescriptorHeap* ppHeaps[] = { ConstantBuffer->CBVHeap };
 	CommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-	CommandList->SetGraphicsRootDescriptorTable(0, ConstantBuffer->CBVHeap->GetGPUDescriptorHandleForHeapStart());
+	CommandList->SetGraphicsRootDescriptorTable(/*RootParameterIndex=*/0, ConstantBuffer->CBVHeap->GetGPUDescriptorHandleForHeapStart());
 	CommandList->RSSetViewports(1, &Viewport);
 	CommandList->RSSetScissorRects(1, &ScissorRect);
 

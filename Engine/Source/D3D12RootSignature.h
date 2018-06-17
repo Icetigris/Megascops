@@ -7,15 +7,12 @@
 #include "d3dx12.h"
 #include "Renderer.h"
 
-// Dependencies: child devices
-class D3D12Adapter;
 class D3D12RootSignature
 {
 public:
-	D3D12RootSignature(D3D12Adapter& InAdapter);
+	D3D12RootSignature() {}
 
-	void Initialize();
+	void Initialize(ID3D12Device* d3dDevice, uint32 NodeMask);
 
-	D3D12Adapter& ParentAdapter;
 	ID3D12RootSignature* d3dRootSignature;
 };

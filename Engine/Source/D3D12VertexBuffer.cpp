@@ -3,13 +3,7 @@
 // D3D12VertexBuffer.cpp - Vertex buffers and vertex buffer views.
 //==========================================================
 #include "D3D12VertexBuffer.h"
-#include "D3D12Device.h"
 #include <DirectXMath.h> //turgle - move later
-
-D3D12VertexBuffer::D3D12VertexBuffer(D3D12Device& InDevice)
-{
-	d3dDevice = InDevice.d3dDevice;
-}
 
 struct Vertex
 {
@@ -17,7 +11,7 @@ struct Vertex
 	DirectX::XMFLOAT4 color;
 };
 
-void D3D12VertexBuffer::Initialize()
+void D3D12VertexBuffer::Initialize(ID3D12Device* d3dDevice)
 {
 	// Define the geometry for a triangle.
 	Vertex triangleVertices[] =

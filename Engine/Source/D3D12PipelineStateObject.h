@@ -13,13 +13,10 @@ class D3D12Adapter;
 class D3D12PipelineStateObject
 {
 public:
-	D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/);
+	D3D12PipelineStateObject() {}
 
-	void Initialize();
-
-	D3D12Adapter& ParentAdapter;
-	D3D12RootSignature& RootSignature;
-
+	void Initialize(ID3D12Device* d3dDevice, ID3D12RootSignature* d3dRootSignature, uint32 NodeMask);
+	
 	ID3D12PipelineState* d3dPipelineState;
 
 	//shaders

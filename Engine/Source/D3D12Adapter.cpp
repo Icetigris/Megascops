@@ -69,11 +69,11 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 	CreateSwapChain(InWindowHandle);
 
 	//turgle move later
-	RootSignature = new D3D12RootSignature(*this);
-	RootSignature->Initialize();
+	RootSignature = new D3D12RootSignature();
+	RootSignature->Initialize(ChildDevice->d3dDevice, /*NodeMask=*/0);
 
-	PipelineStateObject = new D3D12PipelineStateObject(*this, *RootSignature);
-	PipelineStateObject->Initialize();
+	PipelineStateObject = new D3D12PipelineStateObject();
+	PipelineStateObject->Initialize(ChildDevice->d3dDevice, RootSignature->d3dRootSignature, /*NodeMask=*/0);
 }
 // MULTIGPU NOTES:
 // if you use DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT, you have to use GetFrameLatencyWaitableObject() and wait yourself

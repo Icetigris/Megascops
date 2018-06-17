@@ -158,7 +158,6 @@
     <ClCompile Include="Engine\Source\D3D12PipelineStateObject.cpp" />
     <ClCompile Include="Engine\Source\D3D12RootSignature.cpp" />
     <ClCompile Include="Engine\Source\D3D12VertexBuffer.cpp" />
-    <ClCompile Include="Engine\Source\DependencyNode.cpp" />
     <ClCompile Include="Engine\Source\GameInstance.cpp" />
     <ClCompile Include="Engine\Source\Main.cpp" />
     <ClCompile Include="Engine\Source\Renderer.cpp" />
@@ -172,7 +171,6 @@
     <ClInclude Include="Engine\Source\D3D12PipelineStateObject.h" />
     <ClInclude Include="Engine\Source\D3D12RootSignature.h" />
     <ClInclude Include="Engine\Source\D3D12VertexBuffer.h" />
-    <ClInclude Include="Engine\Source\DependencyNode.h" />
     <ClInclude Include="Engine\Source\GameInstance.h" />
     <ClInclude Include="Engine\Source\Log.h" />
     <ClInclude Include="Engine\Source\Platform.h" />

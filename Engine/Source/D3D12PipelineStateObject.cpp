@@ -32,21 +32,13 @@
  * COMPUTE pipeline state objects just have a root signature, CS bytecode, node mask, cached PSO, and flags.
  */
 #include "D3D12PipelineStateObject.h"
-#include "D3D12Adapter.h"
-#include "D3D12Device.h"
 #include <D3Dcompiler.h> //turgle - move later
 #include "Log.h"
 #include <filesystem>
 
 using namespace std::filesystem;
 
-D3D12PipelineStateObject::D3D12PipelineStateObject(D3D12Adapter& InAdapter, D3D12RootSignature& InRootSignature/*, Shaders InShaders*/)
-	:  ParentAdapter(InAdapter)
-	, RootSignature(InRootSignature)
-	//shader bytecode
-{}
-
-void D3D12PipelineStateObject::Initialize()
+void D3D12PipelineStateObject::Initialize(ID3D12Device* d3dDevice, ID3D12RootSignature* d3dRootSignature, uint32 NodeMask)
 {
 	// Create the pipeline state, which includes compiling and loading shaders.
 	ID3DBlob* vertexShader;
@@ -123,7 +115,7 @@ void D3D12PipelineStateObject::Initialize()
 	// Describe and create the graphics pipeline state object (PSO).
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-	psoDesc.pRootSignature = RootSignature.d3dRootSignature;
+	psoDesc.pRootSignature = d3dRootSignature;
 	psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader); //turgle - all this shader stuff belongs somewhere else
 	psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader); //turgle - all this shader stuff belongs somewhere else
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
@@ -137,8 +129,8 @@ void D3D12PipelineStateObject::Initialize()
 	psoDesc.SampleDesc.Count = 1;
 	//psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	psoDesc.SampleDesc.Count = 1;
-	psoDesc.NodeMask = 0; //MULTIGPUTODO - pipeline state objects can be used with more than one node at a time
+	psoDesc.NodeMask = NodeMask; //MULTIGPUTODO - pipeline state objects can be used with more than one node at a time
 	//psoDesc.CachedPSO;
 	//psoDesc.Flags = 0;
-	hr = ParentAdapter.ChildDevice->d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&d3dPipelineState));
+	hr = d3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&d3dPipelineState));
 }

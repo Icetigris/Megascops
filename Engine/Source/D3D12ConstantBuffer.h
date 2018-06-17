@@ -14,16 +14,13 @@ struct SceneConstantBuffer
 	DirectX::XMFLOAT4 offset;
 };
 
-// Dependencies: D3D12Device
-class D3D12Device;
 class D3D12ConstantBuffer
 {
 public:
-	D3D12ConstantBuffer(D3D12Device& InDevice);
+	D3D12ConstantBuffer() {}
 
-	void Initialize();
+	void Initialize(ID3D12Device* d3dDevice, uint32 NodeMask);
 	
-	ID3D12Device* d3dDevice; //probably don't need this? should be able to just pass it into Initialize() and check if the device is ready?
 	ID3D12Resource* ConstantBuffer;
 	D3D12_CONSTANT_BUFFER_VIEW_DESC CBVDesc;
 

@@ -3,23 +3,17 @@
 // D3D12ConstantBuffer.cpp - Constant buffers and constant buffer views.
 //==========================================================
 #include "D3D12ConstantBuffer.h"
-#include "D3D12Device.h"
 
-//dependencies: upload heap
-D3D12ConstantBuffer::D3D12ConstantBuffer(D3D12Device& InDevice)
-{
-	d3dDevice = InDevice.d3dDevice;
-}
-
-void D3D12ConstantBuffer::Initialize()
+void D3D12ConstantBuffer::Initialize(ID3D12Device* d3dDevice, uint32 NodeMask)
 {
 	// Describe and create a constant buffer view (CBV) descriptor heap.
 	// Flags indicate that this descriptor heap can be bound to the pipeline 
 	// and that descriptors contained in it can be referenced by a root table.
 	D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
+	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	cbvHeapDesc.NumDescriptors = 1;
 	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	cbvHeapDesc.NodeMask = NodeMask;
 	d3dDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(&CBVHeap));
 
 	// Create the constant buffer.
@@ -30,7 +24,7 @@ void D3D12ConstantBuffer::Initialize()
 			&CD3DX12_RESOURCE_DESC::Buffer(1024 * 64),
 			D3D12_RESOURCE_STATE_GENERIC_READ,
 			nullptr,
-			IID_PPV_ARGS(&ConstantBuffer));
+			IID_PPV_ARGS(&ConstantBuffer)); //GUID of resource
 
 		// Describe and create a constant buffer view.
 		CBVDesc = {};

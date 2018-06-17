@@ -16,9 +16,6 @@
     <ClCompile Include="Engine\Source\D3D12VertexBuffer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Source\DependencyNode.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -52,9 +49,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Source\D3D12VertexBuffer.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Source\DependencyNode.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Source\Log.h">
