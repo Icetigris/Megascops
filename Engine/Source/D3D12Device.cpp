@@ -7,8 +7,8 @@
 #include "D3D12Adapter.h"
 #include "D3D12RootSignature.h"
 #include "D3D12PipelineStateObject.h"
-#include "D3D12VertexBuffer.h"
-#include "D3D12ConstantBuffer.h"
+#include "D3D12ConstantBuffer.h" //turgle - pass render components in a less hacky way later
+#include "D3D12VertexBuffer.h" //turgle - pass render components in a less hacky way later
 
 D3D12Device::D3D12Device(D3D12Adapter& InAdapter)
 	:  ParentAdapter(InAdapter)
@@ -46,14 +46,7 @@ void D3D12Device::Initialize()
 
 	d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&CommandQueue));
 	CommandQueue->SetName(L"DirectCommandQueue");
-
-	//turgle move later
-	VertexBuffer = new D3D12VertexBuffer();
-	VertexBuffer->Initialize(d3dDevice);
-	//turgle move later
-	ConstantBuffer = new D3D12ConstantBuffer();
-	ConstantBuffer->Initialize(d3dDevice, /*NodeMask=*/0);
-
+	
 	for (uint32 i = 0; i < FrameBufferCount; i++)
 	{
 		d3dDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&CommandAllocators[i]));
@@ -72,17 +65,8 @@ void D3D12Device::Initialize()
 //turgle move later
 CD3DX12_VIEWPORT Viewport(0.0f, 0.0f, static_cast<float>(WinWidth), static_cast<float>(WinHeight));
 CD3DX12_RECT ScissorRect(0, 0, static_cast<LONG>(WinWidth), static_cast<LONG>(WinHeight));
-void D3D12Device::Draw()//pass a draw list? of vertex and constant buffers?
+void D3D12Device::Draw(D3D12ConstantBuffer* ConstantBuffer, D3D12VertexBuffer* VertexBuffer)//turgle - pass render components in a less hacky way later
 {
-	const float translationSpeed = 0.005f;
-	const float offsetBounds = 1.25f;
-
-	ConstantBuffer->ConstantBufferData.offset.x += translationSpeed;
-	if (ConstantBuffer->ConstantBufferData.offset.x > offsetBounds)
-	{
-		ConstantBuffer->ConstantBufferData.offset.x = -offsetBounds;
-	}
-	memcpy(ConstantBuffer->CbvDataBegin, &ConstantBuffer->ConstantBufferData, sizeof(ConstantBuffer->ConstantBufferData));
 	//-------
 	// Command list allocators can only be reset when the associated 
 	// command lists have finished execution on the GPU; apps should use 

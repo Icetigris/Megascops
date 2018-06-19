@@ -3,26 +3,9 @@
 // D3D12VertexBuffer.cpp - Vertex buffers and vertex buffer views.
 //==========================================================
 #include "D3D12VertexBuffer.h"
-#include <DirectXMath.h> //turgle - move later
 
-struct Vertex
+void D3D12VertexBuffer::Initialize(ID3D12Device* d3dDevice, const uint32 vertexBufferSize, const uint32 vertexTypeSize, const void* InVertices)
 {
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT4 color;
-};
-
-void D3D12VertexBuffer::Initialize(ID3D12Device* d3dDevice)
-{
-	// Define the geometry for a triangle.
-	Vertex triangleVertices[] =
-	{
-		{ { 0.0f, 0.25f * AspectRatio, 0.0f },{ 1.0f, 0.0f, 0.0f, 1.0f } },
-	{ { 0.25f, -0.25f * AspectRatio, 0.0f },{ 0.0f, 1.0f, 0.0f, 1.0f } },
-	{ { -0.25f, -0.25f * AspectRatio, 0.0f },{ 0.0f, 0.0f, 1.0f, 1.0f } }
-	};
-
-	const uint32 vertexBufferSize = sizeof(triangleVertices);
-
 	// Note: using upload heaps to transfer static data like vert buffers is not 
 	// recommended. Every time the GPU needs it, the upload heap will be marshalled 
 	// over. Please read up on Default Heap usage. An upload heap is used here for 
@@ -39,11 +22,11 @@ void D3D12VertexBuffer::Initialize(ID3D12Device* d3dDevice)
 	uint8* pVertexDataBegin;
 	CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
 	VertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));
-	memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
+	memcpy(pVertexDataBegin, InVertices, vertexBufferSize);
 	VertexBuffer->Unmap(0, nullptr);
 
 	// Initialize the vertex buffer view.
 	VertexBufferView.BufferLocation = VertexBuffer->GetGPUVirtualAddress();
-	VertexBufferView.StrideInBytes = sizeof(Vertex);
+	VertexBufferView.StrideInBytes = vertexTypeSize;
 	VertexBufferView.SizeInBytes = vertexBufferSize;
 }

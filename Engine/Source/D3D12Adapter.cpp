@@ -173,7 +173,7 @@ void D3D12Adapter::WaitForGPUToFinish()
 
 void D3D12Adapter::Present()
 {
-	ChildDevice->Draw();  // MULTIGPUTODO: for EACH DEVICE
+	//ChildDevice->Draw();  // MULTIGPUTODO: for EACH DEVICE
 
 	// Present the frame.
 	SwapChain->Present(/*Syncinterval=*/1, /*Flags=*/0);

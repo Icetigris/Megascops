@@ -162,6 +162,7 @@
     <ClCompile Include="Engine\Source\Main.cpp" />
     <ClCompile Include="Engine\Source\Renderer.cpp" />
     <ClCompile Include="Engine\Source\Time.cpp" />
+    <ClCompile Include="Engine\Source\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\CommandLine.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Engine\Source\Renderer.h" />
     <ClInclude Include="Engine\Source\ThirdParty\Clara\clara.hpp" />
     <ClInclude Include="Engine\Source\Time.h" />
+    <ClInclude Include="Engine\Source\Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Engine\Shaders\PixelShader.hlsl">

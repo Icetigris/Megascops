@@ -1,6 +1,6 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==============================================================================================================
-// Renderer.h - D3D12 renderer that's going to get refactored away soon enough
+// Renderer.h - D3D12 renderer
 //==============================================================================================================
 #pragma once
 #include "Platform.h"
@@ -18,6 +18,7 @@ extern float AspectRatio;
 
 class D3D12Adapter;
 class D3D12Device;
+class Triangle; //turgle
 
 // 2 for double buffering, 3 for triple buffering
 static const uint32 FrameBufferCount = 2;
@@ -28,7 +29,7 @@ public:
 	{}
 	~Renderer()	{}
 	void Create(const char* Title);
-	void Render();
+	void Render(Triangle triangle);
 	void Destroy();
 
 	SDL_Window* SDLWin;

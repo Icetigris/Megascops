@@ -18,15 +18,11 @@ public:
 
 	D3D12Adapter& GetParentAdapter() const { return ParentAdapter; }
 	
-	void Draw();
+	void Draw(class D3D12ConstantBuffer* ConstantBuffer, class D3D12VertexBuffer* VertexBuffer);//turgle - pass render components in a less hacky way later
 
 	D3D12Adapter& ParentAdapter;
 	ID3D12Device* d3dDevice;
 	ID3D12CommandAllocator* CommandAllocators[FrameBufferCount];
 	ID3D12CommandQueue* CommandQueue; // can have at least 3 of these, one of each type (direct, compute, copy)
 	ID3D12GraphicsCommandList* CommandList;
-
-	//turgle temp move later
-	class D3D12VertexBuffer* VertexBuffer;
-	class D3D12ConstantBuffer* ConstantBuffer;
 };
