@@ -34,6 +34,11 @@ void Triangle::Initialize(ID3D12Device* d3dDevice, uint32 NodeMask)
 
 void Triangle::Update(SDL_Event Input)
 {
+	if (Input.type != SDL_KEYDOWN)
+	{
+		return;
+	}
+
 	//turgle - triangle position (pretend we loaded this from the database instead of hardcoding it)
 	const float translationSpeed = 0.005f;
 	const float offsetBounds = 1.25f;
