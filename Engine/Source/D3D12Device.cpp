@@ -11,7 +11,11 @@
 #include "D3D12VertexBuffer.h" //turgle - pass render components in a less hacky way later
 
 D3D12Device::D3D12Device(D3D12Adapter& InAdapter)
-	:  ParentAdapter(InAdapter)
+	:  ParentAdapter(InAdapter),
+	d3dDevice(nullptr),
+	CommandAllocators{nullptr},
+	CommandQueue(nullptr),
+	CommandList(nullptr)
 {}
 
 void D3D12Device::Initialize()
@@ -62,52 +66,20 @@ void D3D12Device::Initialize()
 		CommandList->Close();
 	}
 }
-//turgle move later
-CD3DX12_VIEWPORT Viewport(0.0f, 0.0f, static_cast<float>(WinWidth), static_cast<float>(WinHeight));
-CD3DX12_RECT ScissorRect(0, 0, static_cast<LONG>(WinWidth), static_cast<LONG>(WinHeight));
+
 void D3D12Device::Draw(D3D12ConstantBuffer* ConstantBuffer, D3D12VertexBuffer* VertexBuffer)//turgle - pass render components in a less hacky way later
 {
-	//-------
-	// Command list allocators can only be reset when the associated 
-	// command lists have finished execution on the GPU; apps should use 
-	// fences to determine GPU execution progress.
-	CommandAllocators[Renderer::FrameIndex]->Reset();
-
-	// However, when ExecuteCommandList() is called on a particular command 
-	// list, that command list can then be reset at any time and must be before 
-	// re-recording.
-	CommandList->Reset(CommandAllocators[Renderer::FrameIndex], ParentAdapter.PipelineStateObject->d3dPipelineState);
-	
 	// Set necessary state.
-	CommandList->SetGraphicsRootSignature(ParentAdapter.RootSignature->d3dRootSignature);
+	CommandList->SetGraphicsRootSignature(ParentAdapter.GetRootSignature());
 
 	ID3D12DescriptorHeap* ppHeaps[] = { ConstantBuffer->CBVHeap };
 	CommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	CommandList->SetGraphicsRootDescriptorTable(/*RootParameterIndex=*/0, ConstantBuffer->CBVHeap->GetGPUDescriptorHandleForHeapStart());
-	CommandList->RSSetViewports(1, &Viewport);
-	CommandList->RSSetScissorRects(1, &ScissorRect);
-
-	// Indicate that the back buffer will be used as a render target.
-	CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(ParentAdapter.GetCurrentFrameBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(ParentAdapter.RTVHeap->GetCPUDescriptorHandleForHeapStart(), Renderer::FrameIndex, ParentAdapter.RTVDescriptorSize);
-	CommandList->OMSetRenderTargets(/*NumRenderTargetDescriptors=*/1, &rtvHandle, /*RTsSingleHandleToDescriptorRange=*/FALSE, /*pDepthStencilDescriptor*/nullptr);
 
 	// Record commands.
-	const float clearColor[] = { 0.2f, 0.0f, 0.4f, 1.0f };
-	CommandList->ClearRenderTargetView(rtvHandle, clearColor, /*NumRects=*/ 0, /*pRects=*/nullptr);
 
 	CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	CommandList->IASetVertexBuffers(/*StartSlot=*/0, /*NumViews=*/1, &VertexBuffer->VertexBufferView);
 	CommandList->DrawInstanced(/*VertexCountPerInstance=*/3, /*InstanceCount=*/1, /*StartVertexLocation*/0, /*StartInstanceLocation=*/0);
-
-	// Indicate that the back buffer will now be used to present.
-	CommandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(ParentAdapter.GetCurrentFrameBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
-
-	CommandList->Close();
-	//-------
-	// Execute the command list.
-	ID3D12CommandList* ppCommandLists[] = { CommandList };
-	CommandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 }

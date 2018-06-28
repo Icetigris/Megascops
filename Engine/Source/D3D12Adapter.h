@@ -21,44 +21,36 @@
 #include <dxgi1_6.h>
 #include "d3dx12.h"
 
-// Dependencies: the engine not crashing before this point I guess lol
-class Renderer;
 class D3D12Device;
 class D3D12Adapter
 {
 public:
-	D3D12Adapter(Renderer& InRenderer)
-	{
-		PipelineState = nullptr;
-		DXGIAdapter = nullptr;
-	}
+	D3D12Adapter()
+		: DXGIAdapter(nullptr),
+		DXGIFactory(nullptr),
+		RootDevice(nullptr),
+		AdapterNodes{nullptr},
+		RootSignature(nullptr),
+		PipelineStateObject(nullptr)
+	{}
 
-	~D3D12Adapter();
-
-	void Initialize(HWND InWindowHandle);
-	void CreateSwapChain(HWND InWindowHandle);
-	void Present();
-	void WaitForGPUToFinish();
-
-	IDXGIFactory6* GetFactory() const { return DXGIFactory; }
-	ID3D12Resource* GetCurrentFrameBuffer() const { return FrameBuffers[Renderer::FrameIndex]; }
+	void Initialize();
 
 	IDXGIAdapter4* DXGIAdapter;
 	IDXGIFactory6* DXGIFactory;
-	ID3D12PipelineState* PipelineState;
+
+	// Linked device adapters have 1 root device
+	D3D12Device* RootDevice;
+
+	// Each node is a real actual physical graphics card
+	D3D12Device* AdapterNodes[8]; //turgle - 8 because this is the hellscape I've been living in
 
 	//make this a vector later
-	D3D12Device* ChildDevice; // MULTIGPUTODO: for EACH DEVICE
+	//D3D12Device* ChildDevice; // MULTIGPUTODO: for EACH DEVICE
 
-	HWND WindowHandle; //do I need to keep this around or not
-
-	IDXGISwapChain3* SwapChain;
-	HANDLE FenceEvent;
-	ID3D12Fence* FrameFence;
-	uint64 FenceValues[FrameBufferCount];
-	ID3D12Resource* FrameBuffers[FrameBufferCount];
-	ID3D12DescriptorHeap* RTVHeap;
-	UINT RTVDescriptorSize;
+	IDXGIFactory6* GetFactory() const { return DXGIFactory; }
+	ID3D12PipelineState* GetPipelineState() const;
+	ID3D12RootSignature* GetRootSignature() const;
 
 	class D3D12RootSignature* RootSignature;
 	class D3D12PipelineStateObject* PipelineStateObject;

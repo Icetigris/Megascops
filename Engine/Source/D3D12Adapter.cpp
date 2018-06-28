@@ -8,13 +8,15 @@
 #include "Log.h"
 #include "D3D12RootSignature.h"
 #include "D3D12PipelineStateObject.h"
+#include <vector>
 
 //also copied from the d3d12 samples lol
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
 // If no such adapter can be found, *ppAdapter will be set to nullptr.
-void D3D12Adapter::Initialize(HWND InWindowHandle)
+void D3D12Adapter::Initialize()
 {
-	IDXGIAdapter4* adapter;
+	IDXGIAdapter4* TempAdapter;
+	std::vector<DXGI_ADAPTER_DESC3> FoundAdapterDescs;
 
 	uint32 dxgiFactoryFlags = 0;
 	CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&DXGIFactory));
@@ -36,10 +38,10 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 	}
 
 	uint32 adapterIndex = 0;
-	for (adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapterByGpuPreference(adapterIndex, DXGI_GPU_PREFERENCE_UNSPECIFIED, IID_PPV_ARGS(&adapter)); ++adapterIndex)
+	for (adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapterByGpuPreference(adapterIndex, DXGI_GPU_PREFERENCE_UNSPECIFIED, IID_PPV_ARGS(&TempAdapter)); ++adapterIndex)
 	{
 		DXGI_ADAPTER_DESC3 desc;
-		adapter->GetDesc3(&desc);
+		TempAdapter->GetDesc3(&desc);
 
 		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
 		{
@@ -49,18 +51,21 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 		}
 
 		// Check to see if the adapter supports Direct3D 12, but don't create the actual device yet.
-		if (SUCCEEDED(D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
+		if (SUCCEEDED(D3D12CreateDevice(TempAdapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
 		{
+			D3D12_FEATURE_DATA_D3D12_OPTIONS D3D12Capabilites;
+			memset(&D3D12Capabilites, 0, sizeof(D3D12Capabilites));
 			MEGALOGLN("Found hardware adapter: ");
 			MEGALOGLN(desc.Description);
 			MEGALOGLN("Dedicated video memory: " << desc.DedicatedVideoMemory / 1048576 << " MB");
 			MEGALOGLN("Dedicated system memory: " << desc.DedicatedSystemMemory / 1048576 << " MB");
 			MEGALOGLN("Shared system memory: " << desc.SharedSystemMemory / 1048576 << " MB");
-			break;
+			FoundAdapterDescs.push_back(desc);
+			break; //turgle - delete later when you're enuming multiple adapters properly
 		}
 	}
 
-	if (!adapter)
+	if (FoundAdapterDescs.size() < 1)
 	{
 		MEGALOGLN("Could not find a hardware adapter that supports D3D12.");
 	}
@@ -73,147 +78,28 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 		MEGALOGLN("Found 1 hardware adapter.");
 	}
 
-	DXGIAdapter = adapter;
-
+	DXGIAdapter = TempAdapter;
+	
+	//turgle - move all the shit beneath this line somewhere else
 	// might need a factory for devices too
-	//maybe just return a list of adapters
-	ChildDevice = new D3D12Device(*this); //turgle this is messy and I don't like it but I want this to run before I unfuck it
+	RootDevice = new D3D12Device(*this); //turgle this is messy and I don't like it but I want this to run before I unfuck it
 
-	ChildDevice->Initialize(); // MULTIGPUTODO: for EACH DEVICE
-	CreateSwapChain(InWindowHandle); //turgle - separate adapter and swap chain creation
+	RootDevice->Initialize(); // MULTIGPUTODO: for EACH DEVICE
 
 	//turgle move later
 	RootSignature = new D3D12RootSignature();
-	RootSignature->Initialize(ChildDevice->d3dDevice, /*NodeMask=*/0);
+	RootSignature->Initialize(RootDevice->d3dDevice, /*NodeMask=*/0);
 
 	PipelineStateObject = new D3D12PipelineStateObject();
-	PipelineStateObject->Initialize(ChildDevice->d3dDevice, RootSignature->d3dRootSignature, /*NodeMask=*/0);
-}
-// MULTIGPU NOTES:
-// if you use DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT, you have to use GetFrameLatencyWaitableObject() and wait yourself
-// SetMaximumFrameLatency() will stall Present() if you don't use DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT
-void D3D12Adapter::CreateSwapChain(HWND InWindowHandle)
-{
-	WindowHandle = InWindowHandle; //turgle - check handle integrity?
-
-	// Describe and create the swap chain.
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-	swapChainDesc.BufferCount = FrameBufferCount;
-	swapChainDesc.Width = WinWidth;
-	swapChainDesc.Height = WinHeight;
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	swapChainDesc.SampleDesc.Count = 1;
-
-	DXGI_SWAP_CHAIN_FULLSCREEN_DESC swapChainFullscreenDesc = {};
-	swapChainFullscreenDesc.RefreshRate.Numerator = 0;
-	swapChainFullscreenDesc.RefreshRate.Denominator = 0;
-	swapChainFullscreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	swapChainFullscreenDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	swapChainFullscreenDesc.Windowed = !GIsFullscreen;
-
-	IDXGISwapChain1* swapChain;
-	DXGIFactory->CreateSwapChainForHwnd(
-		ChildDevice->CommandQueue,		// MULTIGPUTODO: for EACH DEVICE
-		WindowHandle,
-		&swapChainDesc,
-		&swapChainFullscreenDesc,
-		/*pRestrictToOutput=*/nullptr,
-		&swapChain);
-
-	DXGIFactory->MakeWindowAssociation(WindowHandle, DXGI_MWA_NO_ALT_ENTER);
-
-	SwapChain = static_cast<IDXGISwapChain3*>(swapChain);
-	Renderer::FrameIndex = SwapChain->GetCurrentBackBufferIndex();
-
-	// Create descriptor heaps.
-	{
-		// Describe and create a render target view (RTV) descriptor heap.
-		D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-		rtvHeapDesc.NumDescriptors = FrameBufferCount;
-		rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-		rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		ChildDevice->d3dDevice->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&RTVHeap)); // MULTIGPUTODO: for EACH DEVICE
-		RTVHeap->SetName(L"SwapChainRTVHeap");
-		RTVDescriptorSize = ChildDevice->d3dDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	}
-
-	// Create frame resources.
-	{
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(RTVHeap->GetCPUDescriptorHandleForHeapStart());
-
-		// Create a RTV for each frame.
-		for (uint32 n = 0; n < FrameBufferCount; n++)
-		{
-			SwapChain->GetBuffer(n, IID_PPV_ARGS(&FrameBuffers[n]));
-			ChildDevice->d3dDevice->CreateRenderTargetView(FrameBuffers[n], nullptr, rtvHandle); // MULTIGPUTODO: for EACH DEVICE
-			FrameBuffers[n]->SetName(L"SwapChainRTV");
-			rtvHandle.Offset(1, RTVDescriptorSize);
-		}
-	}
-
-	// Create synchronization objects.
-	{
-		ChildDevice->d3dDevice->CreateFence(/*InitialValue=*/0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&FrameFence)); // MULTIGPUTODO: for EACH DEVICE
-		FrameFence->SetName(L"FrameFence");
-
-		for (uint32 i = 0; i < FrameBufferCount; i++)
-		{
-			FenceValues[i] = 1;
-		}
-
-		// Create an event handle to use for frame synchronization.
-		FenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-		if (FenceEvent == nullptr)
-		{
-			HRESULT_FROM_WIN32(GetLastError());
-		}
-	}
+	PipelineStateObject->Initialize(RootDevice->d3dDevice, RootSignature->d3dRootSignature, /*NodeMask=*/0);
 }
 
-void D3D12Adapter::WaitForGPUToFinish()
+ID3D12PipelineState* D3D12Adapter::GetPipelineState() const
 {
-	// Schedule a Signal command in the queue.
-	ChildDevice->CommandQueue->Signal(FrameFence, FenceValues[Renderer::FrameIndex]);
-
-	// Wait until the fence has been processed.
-	FrameFence->SetEventOnCompletion(FenceValues[Renderer::FrameIndex], FenceEvent);
-	WaitForSingleObjectEx(FenceEvent, INFINITE, FALSE);
-
-	// Increment the fence value for the current frame.
-	FenceValues[Renderer::FrameIndex]++;
+	return PipelineStateObject->d3dPipelineState;
 }
 
-void D3D12Adapter::Present()
+ID3D12RootSignature* D3D12Adapter::GetRootSignature() const
 {
-	//ChildDevice->Draw();  // MULTIGPUTODO: for EACH DEVICE
-
-	// Present the frame.
-	SwapChain->Present(/*Syncinterval=*/1, /*Flags=*/0);
-
-	const uint64 currentFenceValue = FenceValues[Renderer::FrameIndex];
-
-	// Schedule a Signal command in the queue.
-	ChildDevice->CommandQueue->Signal(FrameFence, currentFenceValue);
-
-	// Update the frame index.
-	Renderer::FrameIndex = SwapChain->GetCurrentBackBufferIndex();
-
-	// If the next frame is not ready to be rendered yet, wait until it is ready.
-	if (FrameFence->GetCompletedValue() < FenceValues[Renderer::FrameIndex])
-	{
-		FrameFence->SetEventOnCompletion(FenceValues[Renderer::FrameIndex], FenceEvent);
-		WaitForSingleObjectEx(FenceEvent, INFINITE, FALSE);
-	}
-
-	// Set the fence value for the next frame.
-	FenceValues[Renderer::FrameIndex] = currentFenceValue + 1;
-}
-
-
-D3D12Adapter::~D3D12Adapter()
-{
-	WaitForGPUToFinish();
-	CloseHandle(FenceEvent);
+	return RootSignature->d3dRootSignature;
 }

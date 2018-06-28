@@ -37,6 +37,9 @@
     <ClCompile Include="Engine\Source\Triangle.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\D3D12Viewport.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\D3D12Adapter.h">
@@ -82,6 +85,9 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Source\Triangle.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\D3D12Viewport.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

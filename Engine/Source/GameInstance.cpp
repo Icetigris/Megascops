@@ -22,7 +22,7 @@ GameInstance::GameInstance()
 {
 	Time& t = Time::GetInstance();
 	D3D12Renderer.Create("Megascops Engine"); //turgle
-	triangle.Initialize(D3D12Renderer.Adapter->ChildDevice->d3dDevice, /*NodeMask=*/0); //turgle
+	triangle.Initialize(D3D12Renderer.Adapter->RootDevice->d3dDevice, /*NodeMask=*/0); //turgle
 }
 
 // GameInstance::~GameInstance()

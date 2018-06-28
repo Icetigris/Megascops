@@ -17,6 +17,7 @@ extern bool GIsFullscreen;
 extern float AspectRatio;
 
 class D3D12Adapter;
+class D3D12Viewport;
 class D3D12Device;
 class Triangle; //turgle
 
@@ -25,7 +26,10 @@ static const uint32 FrameBufferCount = 2;
 class Renderer
 {
 public:
-	Renderer()
+	Renderer():
+		SDLWin(nullptr),
+		Adapter(nullptr),
+		Viewport(nullptr)
 	{}
 	~Renderer()	{}
 	void Create(const char* Title);
@@ -34,5 +38,6 @@ public:
 
 	SDL_Window* SDLWin;
 	D3D12Adapter* Adapter;
+	D3D12Viewport* Viewport;
 	static uint32 FrameIndex;
 };

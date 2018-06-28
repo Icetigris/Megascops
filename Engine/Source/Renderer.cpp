@@ -6,10 +6,9 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "D3D12Adapter.h"
+#include "D3D12Viewport.h"
 #include "D3D12Device.h"
 #include "Triangle.h" //turgle
-
-HWND WindowHandle; //used in swapchain
 
 uint32 Renderer::FrameIndex = 0;
 
@@ -43,23 +42,28 @@ void Renderer::Create(const char* Title)
 	SDL_SysWMinfo windowinfo;
 	SDL_VERSION(&windowinfo.version);
 	SDL_GetWindowWMInfo(SDLWin, &windowinfo);
-	WindowHandle = windowinfo.info.win.window;
+	HWND WindowHandle = windowinfo.info.win.window;
 
 	AspectRatio = (float)WinWidth / (float)WinHeight;
 
 	// might need like a factory or something for multigpu
-	Adapter = new D3D12Adapter(*this);
-	Adapter->Initialize(WindowHandle);
+	Adapter = new D3D12Adapter();
+	Adapter->Initialize(); //creates DXGIFactory, which you need to make the swap chain
+	//create the viewport and swap chain
+	Viewport = new D3D12Viewport(Adapter);
+	Viewport->CreateSwapChain(WindowHandle);
 }
 
 void Renderer::Render(Triangle triangle)
 {
-	Adapter->ChildDevice->Draw(triangle.ConstantBuffer, triangle.VertexBuffer); //MULTIGPUTODO: for each device //turgle - pass render components in a less hacky way later
-	Adapter->Present();
+	Viewport->PrepareNextFrame(); //turgle
+	Adapter->RootDevice->Draw(triangle.ConstantBuffer, triangle.VertexBuffer); //MULTIGPUTODO: for each device //turgle - pass render components in a less hacky way later
+	Viewport->Present();
 }
 
 void Renderer::Destroy()
 {
+	delete Viewport;
 	delete Adapter;
 	SDL_DestroyWindow(SDLWin);
 }
