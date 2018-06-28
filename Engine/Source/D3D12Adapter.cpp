@@ -14,7 +14,7 @@
 // If no such adapter can be found, *ppAdapter will be set to nullptr.
 void D3D12Adapter::Initialize(HWND InWindowHandle)
 {
-	IDXGIAdapter1* adapter;
+	IDXGIAdapter4* adapter;
 
 	uint32 dxgiFactoryFlags = 0;
 	CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&DXGIFactory));
@@ -35,11 +35,11 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 		}
 	}
 
-
-	for (uint32 adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapters1(adapterIndex, &adapter); ++adapterIndex)
+	uint32 adapterIndex = 0;
+	for (adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapterByGpuPreference(adapterIndex, DXGI_GPU_PREFERENCE_UNSPECIFIED, IID_PPV_ARGS(&adapter)); ++adapterIndex)
 	{
-		DXGI_ADAPTER_DESC1 desc;
-		adapter->GetDesc1(&desc);
+		DXGI_ADAPTER_DESC3 desc;
+		adapter->GetDesc3(&desc);
 
 		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
 		{
@@ -51,6 +51,11 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 		// Check to see if the adapter supports Direct3D 12, but don't create the actual device yet.
 		if (SUCCEEDED(D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
 		{
+			MEGALOGLN("Found hardware adapter: ");
+			MEGALOGLN(desc.Description);
+			MEGALOGLN("Dedicated video memory: " << desc.DedicatedVideoMemory / 1048576 << " MB");
+			MEGALOGLN("Dedicated system memory: " << desc.DedicatedSystemMemory / 1048576 << " MB");
+			MEGALOGLN("Shared system memory: " << desc.SharedSystemMemory / 1048576 << " MB");
 			break;
 		}
 	}
@@ -59,14 +64,23 @@ void D3D12Adapter::Initialize(HWND InWindowHandle)
 	{
 		MEGALOGLN("Could not find a hardware adapter that supports D3D12.");
 	}
+	else if (adapterIndex > 0)
+	{
+		MEGALOGLN("Found " << adapterIndex + 1 << " hardware adapters.");
+	}
+	else
+	{
+		MEGALOGLN("Found 1 hardware adapter.");
+	}
 
 	DXGIAdapter = adapter;
 
 	// might need a factory for devices too
+	//maybe just return a list of adapters
 	ChildDevice = new D3D12Device(*this); //turgle this is messy and I don't like it but I want this to run before I unfuck it
 
 	ChildDevice->Initialize(); // MULTIGPUTODO: for EACH DEVICE
-	CreateSwapChain(InWindowHandle);
+	CreateSwapChain(InWindowHandle); //turgle - separate adapter and swap chain creation
 
 	//turgle move later
 	RootSignature = new D3D12RootSignature();

@@ -18,7 +18,7 @@
 */
 #pragma once
 #include <d3d12.h>
-#include <dxgi1_4.h>
+#include <dxgi1_6.h>
 #include "d3dx12.h"
 
 // Dependencies: the engine not crashing before this point I guess lol
@@ -40,11 +40,11 @@ public:
 	void Present();
 	void WaitForGPUToFinish();
 
-	IDXGIFactory4* GetFactory() const { return DXGIFactory; }
+	IDXGIFactory6* GetFactory() const { return DXGIFactory; }
 	ID3D12Resource* GetCurrentFrameBuffer() const { return FrameBuffers[Renderer::FrameIndex]; }
 
-	IDXGIAdapter1* DXGIAdapter;
-	IDXGIFactory4* DXGIFactory;
+	IDXGIAdapter4* DXGIAdapter;
+	IDXGIFactory6* DXGIFactory;
 	ID3D12PipelineState* PipelineState;
 
 	//make this a vector later

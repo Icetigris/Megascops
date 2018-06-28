@@ -18,7 +18,7 @@ void D3D12VertexBuffer::Initialize(ID3D12Device* d3dDevice, const uint32 vertexB
 		nullptr,
 		IID_PPV_ARGS(&VertexBuffer));
 
-	// Copy the triangle data to the vertex buffer.
+	// Copy the vertex data to the vertex buffer.
 	uint8* pVertexDataBegin;
 	CD3DX12_RANGE readRange(0, 0);		// We do not intend to read from this resource on the CPU.
 	VertexBuffer->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin));

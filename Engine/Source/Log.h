@@ -1,6 +1,6 @@
 // Copyright 2018 Elizabeth Baumel. All rights reserved.
 //==========================================================
-// Log.h - EntryDebug logging.
+// Log.h - Debug logging.
 //==========================================================
 
 #ifdef _MSC_VER
