@@ -10,13 +10,8 @@
 #include "D3D12PipelineStateObject.h"
 #include <vector>
 
-//also copied from the d3d12 samples lol
-// Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
-// If no such adapter can be found, *ppAdapter will be set to nullptr.
 void D3D12Adapter::Initialize()
 {
-	IDXGIAdapter4* TempAdapter;
-	std::vector<DXGI_ADAPTER_DESC3> FoundAdapterDescs;
 
 	uint32 dxgiFactoryFlags = 0;
 	CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&DXGIFactory));
@@ -37,8 +32,9 @@ void D3D12Adapter::Initialize()
 		}
 	}
 
-	uint32 adapterIndex = 0;
-	for (adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapterByGpuPreference(adapterIndex, DXGI_GPU_PREFERENCE_UNSPECIFIED, IID_PPV_ARGS(&TempAdapter)); ++adapterIndex)
+	IDXGIAdapter4* TempAdapter = nullptr;
+	std::vector<DXGI_ADAPTER_DESC3> FoundAdapterDescs;
+	for (uint32 adapterIndex = 0; DXGI_ERROR_NOT_FOUND != DXGIFactory->EnumAdapterByGpuPreference(adapterIndex, DXGI_GPU_PREFERENCE_UNSPECIFIED, IID_PPV_ARGS(&TempAdapter)); ++adapterIndex)
 	{
 		DXGI_ADAPTER_DESC3 desc;
 		TempAdapter->GetDesc3(&desc);
@@ -50,18 +46,23 @@ void D3D12Adapter::Initialize()
 			continue;
 		}
 
+		//create fake/temp device to see how many nodes we have (i.e. see if we're in LDA mode or not)
+		ID3D12Device* TempDevice = nullptr;
+
 		// Check to see if the adapter supports Direct3D 12, but don't create the actual device yet.
-		if (SUCCEEDED(D3D12CreateDevice(TempAdapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), nullptr)))
+		if (SUCCEEDED(D3D12CreateDevice(TempAdapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&TempDevice))))
 		{
 			D3D12_FEATURE_DATA_D3D12_OPTIONS D3D12Capabilites;
 			memset(&D3D12Capabilites, 0, sizeof(D3D12Capabilites));
+
 			MEGALOGLN("Found hardware adapter: ");
 			MEGALOGLN(desc.Description);
 			MEGALOGLN("Dedicated video memory: " << desc.DedicatedVideoMemory / 1048576 << " MB");
 			MEGALOGLN("Dedicated system memory: " << desc.DedicatedSystemMemory / 1048576 << " MB");
 			MEGALOGLN("Shared system memory: " << desc.SharedSystemMemory / 1048576 << " MB");
+			MEGALOGLN("Device nodes: " << TempDevice->GetNodeCount());
 			FoundAdapterDescs.push_back(desc);
-			break; //turgle - delete later when you're enuming multiple adapters properly
+			TempDevice->Release();
 		}
 	}
 
@@ -69,19 +70,15 @@ void D3D12Adapter::Initialize()
 	{
 		MEGALOGLN("Could not find a hardware adapter that supports D3D12.");
 	}
-	else if (adapterIndex > 0)
-	{
-		MEGALOGLN("Found " << adapterIndex + 1 << " hardware adapters.");
-	}
 	else
 	{
-		MEGALOGLN("Found 1 hardware adapter.");
+		MEGALOGLN("Found " << FoundAdapterDescs.size() << " hardware adapter(s).");
 	}
 
+	//turgle - move all the shit beneath this line somewhere else
+	// Create nodes/adapters from descs we found during enumeration
 	DXGIAdapter = TempAdapter;
 	
-	//turgle - move all the shit beneath this line somewhere else
-	// might need a factory for devices too
 	RootDevice = new D3D12Device(*this); //turgle this is messy and I don't like it but I want this to run before I unfuck it
 
 	RootDevice->Initialize(); // MULTIGPUTODO: for EACH DEVICE

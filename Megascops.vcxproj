@@ -175,8 +175,10 @@
     <ClInclude Include="Engine\Source\D3D12VertexBuffer.h" />
     <ClInclude Include="Engine\Source\D3D12Viewport.h" />
     <ClInclude Include="Engine\Source\GameInstance.h" />
+    <ClInclude Include="Engine\Source\GPUNodeMask.h" />
     <ClInclude Include="Engine\Source\Log.h" />
     <ClInclude Include="Engine\Source\Platform.h" />
+    <ClInclude Include="Engine\Source\PlatformIntrinsics.h" />
     <ClInclude Include="Engine\Source\PlatformUbiquitous.h" />
     <ClInclude Include="Engine\Source\Renderer.h" />
     <ClInclude Include="Engine\Source\ThirdParty\Clara\clara.hpp" />

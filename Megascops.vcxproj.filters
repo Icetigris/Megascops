@@ -90,6 +90,12 @@
     <ClInclude Include="Engine\Source\D3D12Viewport.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Source\PlatformIntrinsics.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\GPUNodeMask.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source">

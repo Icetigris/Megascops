@@ -39,8 +39,8 @@ public:
 	IDXGIAdapter4* DXGIAdapter;
 	IDXGIFactory6* DXGIFactory;
 
-	// Linked device adapters have 1 root device
-	D3D12Device* RootDevice;
+	// Linked device adapters have 1 root device; this is the device that should be used where a device is required for adapter level shit (i.e. pipeline state, root signatures, etc)
+	D3D12Device* RootDevice; //probably should be private
 
 	// Each node is a real actual physical graphics card
 	D3D12Device* AdapterNodes[8]; //turgle - 8 because this is the hellscape I've been living in
